@@ -1,0 +1,37 @@
+custom_imports = dict(
+    imports=["segmentation.datasets.pascalpart116_part117"],
+    allow_failed_imports=False,
+)
+
+dataset_type = "PascalPart117Dataset"
+
+test_pipeline = [
+    dict(type="LoadImageFromFile"),
+    dict(
+        type="MultiScaleFlipAug",
+        img_scale=(2048, 448),
+        flip=False,
+        transforms=[
+            dict(type="Resize", keep_ratio=True),
+            dict(type="RandomFlip"),
+            dict(type="FloatImage"),
+            dict(type="ImageToTensor", keys=["img"]),
+            dict(type="Collect", keys=["img"]),
+        ],
+    ),
+]
+
+data = dict(
+    test=dict(
+        type=dataset_type,
+        img_dir='/mnt/sda/master/dataset/lyx/PascalPart116/images/val',
+        ann_dir='/mnt/sda/master/code/lyx/Talk2DINO_official_bg/data/PascalPart116_part117_eval/annotations/val',
+        split='/mnt/sda/master/dataset/lyx/PascalPart116/val.txt',
+        pipeline=test_pipeline,
+        test_mode=True,
+        ignore_index=255,
+        reduce_zero_label=False,
+    )
+)
+
+test_cfg = dict(mode="slide", stride=(224, 224), crop_size=(448, 448))

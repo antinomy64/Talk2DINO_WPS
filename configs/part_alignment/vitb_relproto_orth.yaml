@@ -1,0 +1,68 @@
+# Relative-Margin Prototype Induction + Structure-Preserving Alignment
+# Main no-GT-spatial configuration.
+#
+# Required training inputs per annotation:
+#   cropaug_patch_tokens : [P,768] frozen DINO patch features
+#   part_category_id     : image-level part-presence IDs
+#   pred_obj_mask_patch  : predicted foreground support aligned to the patch grid
+#
+# The part text bank is a fixed [116,768] bank produced by the Talk2DINO
+# evaluation text path (prompt ensemble -> CLIP -> projector -> L2 normalize).
+
+output_dir: outputs/relproto_alignment/vitb_relproto_orth
+
+data:
+  train_pth: feature/voc116_obj_part_reproduce_mIoU28/train_voc116_obj_with_llama3_objpart_mean.pth
+  patch_key: cropaug_patch_tokens
+  image_id_key: image_id
+  category_id_key: category_id
+  class_name_key: class_name
+  crop_box_key: cropaug_box_xyxy
+  obj_seg_key: seg_file_name
+  part_seg_key: part_seg_file_name
+  feature_view: cropaug
+  path_prefix: null
+  class_names: all
+  max_annotations: 0
+  max_parts_per_image: 14
+
+  # Main paper path: use supplied image-level presence labels directly.
+  presence:
+    source: annotation
+    key: part_category_id
+
+  # Main paper path: predicted foreground; no GT object mask is read.
+  # pred_obj_mask_patch must already refer to the SAME crop / token grid as
+  # cropaug_patch_tokens. Values may be bool, 0/1, or probabilities.
+  foreground:
+    source: precomputed
+    key: pred_obj_mask_patch
+    threshold: 0.5
+
+text:
+  # Fixed 116x768 part bank from the exact Talk2DINO eval text pipeline.
+  source: precomputed
+  bank_path: feature/pascalpart116_text/part_text_bank_116_projected.pt
+  bank_key: features
+
+prototype:
+  score: relative
+  distinct_anchor: true
+  positive_margin_only: true
+  max_patches: 4
+
+alignment:
+  type: orthogonal
+  side: right
+  initialization: identity
+  loss: cosine
+
+train:
+  seed: 123
+  epochs: 10
+  batch_size: 16
+  lr: 0.001
+  device: auto
+  log_every: 100
+  orthogonality_tolerance: 0.0008
+  structure_tolerance: 0.0008

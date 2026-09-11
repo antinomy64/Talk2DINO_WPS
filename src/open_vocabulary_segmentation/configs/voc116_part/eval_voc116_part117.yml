@@ -1,0 +1,11 @@
+evaluate:
+  pamr: false
+  bg_thresh: 0.4
+  kp_w: 0.0
+  pred_qual_path: null
+  gt_qual_path: null
+  eval_only: true
+  template: sub_imagenet_template
+  task:
+    - voc116_part
+  voc116_part: src/open_vocabulary_segmentation/segmentation/configs/_base_/datasets/pascalpart116_part117.py

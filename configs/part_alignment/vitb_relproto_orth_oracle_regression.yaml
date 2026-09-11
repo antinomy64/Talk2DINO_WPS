@@ -1,0 +1,67 @@
+# Historical-regression configuration for the old 28.10 pipeline.
+# This config deliberately uses spatial GT and is NOT the main paper setting.
+# Use it only to verify that the refactored implementation preserves the old
+# RelProto + orthogonal-W mathematics before switching to predicted foreground.
+
+output_dir: outputs/relproto_alignment/oracle_regression
+
+data:
+  train_pth: feature/voc116_obj_part_reproduce_mIoU28/train_voc116_obj_with_llama3_objpart_mean.pth
+  patch_key: cropaug_patch_tokens
+  image_id_key: image_id
+  category_id_key: category_id
+  class_name_key: class_name
+  crop_box_key: cropaug_box_xyxy
+  obj_seg_key: seg_file_name
+  part_seg_key: part_seg_file_name
+  feature_view: cropaug
+  path_prefix: null
+  class_names: all
+  max_annotations: 0
+  max_parts_per_image: 14
+
+  # Historical v9 derived per-image visible parts from part GT.
+  presence:
+    source: oracle_part_mask
+    key: part_category_id
+
+  # Historical v9 preferred the saved object patch mask when present and
+  # otherwise derived it with nearest-neighbor downsampling.
+  foreground:
+    source: stored_or_nearest
+    stored_key: obj_mask_patch
+    seg_key: seg_file_name
+    category_id_key: category_id
+    category_offset: 0
+
+text:
+  # Historical 4096D part_ann_feats -> frozen part-structure projector -> 768D.
+  source: dataset_projector
+  part_id_key: part_category_id
+  part_text_key: part_ann_feats
+  part_name_key: part_class_name
+  model_config: configs/vitb_mlp_infonce_llama4096.yaml
+  weights: weights/vitb_mlp_infonce_llama4096_voc116_obj_test16_partstruct_ft_w1e4_lr1e5_ep10_best.pth
+  project_batch_size: 128
+
+prototype:
+  score: relative
+  distinct_anchor: true
+  positive_margin_only: true
+  max_patches: 4
+
+alignment:
+  type: orthogonal
+  side: right
+  initialization: identity
+  loss: cosine
+
+train:
+  seed: 123
+  epochs: 10
+  batch_size: 16
+  lr: 0.001
+  device: auto
+  log_every: 100
+  orthogonality_tolerance: 0.0008
+  structure_tolerance: 0.0008
