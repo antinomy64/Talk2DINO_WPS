@@ -1,0 +1,821 @@
+nohup: ignoring input
+
+========================================================================
+[STEP] 00_preflight
+========================================================================
+[OK] configs/vitb_mlp_infonce.yaml
+[OK] feature/pascalpart116_clip_text/pascalpart116_clip_vitb16_subimagenet_raw.pt
+[OK] feature/pascalpart116_gt_visual_structure/gt_dinov2_vitb14reg_train_objcrop_x1p2.pt
+[OK] weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth
+[OK] feature/coco2014_official_reproduce/captions_train2014_ready.pth
+[OK] feature/coco2014_official_reproduce/captions_val2014_ready.pth
+[OK] src/loss.py
+[OK] src/loss_textstruct_zoo.py
+[OK] src/train_util_textstruct_zoo.py
+[OK] train_textstruct_zoo.py
+[OK] audit_textstruct_checkpoint.py
+[OK] train_gtproto_oracle.py
+[OK] src/open_vocabulary_segmentation/configs/voc116_part/dinotext_voc116_part_vitb_mlp_infonce.yml
+[OK] src/open_vocabulary_segmentation/configs/voc116_part/eval_voc116_part.yml
+[loss-smoke] object_rank              loss=0.18555059 grad=1.5895379
+[loss-smoke] global_row_rank          loss=0.23055664 grad=1.6038234
+[loss-smoke] object_neighbor_kl       loss=0.21125203 grad=1.9436814
+[loss-smoke] global_neighbor_kl       loss=2.2545016 grad=14.410441
+[loss-smoke] object_confidence_rank   loss=0.0033471233 grad=0.042663952
+[loss-smoke] global_confidence_rank   loss=0.0010671426 grad=0.03526426
+[loss-smoke] rkd_distance             loss=0.0043804222 grad=0.026093752
+[loss-smoke] rkd_angle                loss=0.0039980337 grad=0.020066615
+[loss-smoke] gram_mse                 loss=0.22885747 grad=2.1493587
+[loss-smoke] gram_corr                loss=0.22192442 grad=1.5440151
+[loss-smoke] topk_margin              loss=0.070965067 grad=0.29440055
+ALL_11_TEXTSTRUCT_LOSSES_REAL_PROJECTOR_SMOKE_PASS
+[PASS] 00_preflight
+
+========================================================================
+SPEARMAN-FIRST OVERNIGHT
+========================================================================
+start       : 2026-09-12T02:48:41+08:00
+run         : output/textstruct_spearman_20260912_024827
+epochs/lr   : 10 / 1e-5
+base lambda : 1e-4
+grad calib  : 1
+Only GTProto Oracle gets PascalPart116 mIoU.
+All 11 text-only candidates get THREE Spearmans only.
+========================================================================
+
+========================================================================
+[STEP] 01_audit_initial
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.52252757
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 01_audit_initial
+
+========================================================================
+[STEP] 02_audit_existing_partstruct
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.47892120
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 02_audit_existing_partstruct
+
+========================================================================
+[STEP] 03_train_gtproto_oracle
+========================================================================
+[oracle] {"step": 1, "loss": 0.4665406346321106, "mean_matching_cosine": 0.5334593653678894}
+[oracle] {"step": 50, "loss": 0.31603506207466125, "mean_matching_cosine": 0.6839649677276611}
+[oracle] {"step": 100, "loss": 0.25077909231185913, "mean_matching_cosine": 0.7492209076881409}
+[oracle] {"step": 150, "loss": 0.2131417989730835, "mean_matching_cosine": 0.7868582606315613}
+[oracle] {"step": 200, "loss": 0.18643346428871155, "mean_matching_cosine": 0.8135664463043213}
+[oracle] {"step": 250, "loss": 0.16586023569107056, "mean_matching_cosine": 0.8341397643089294}
+[oracle] {"step": 300, "loss": 0.1493748277425766, "mean_matching_cosine": 0.850625216960907}
+[oracle] {"step": 350, "loss": 0.13582009077072144, "mean_matching_cosine": 0.8641799092292786}
+[oracle] {"step": 400, "loss": 0.12445501238107681, "mean_matching_cosine": 0.8755449652671814}
+[oracle] {"step": 450, "loss": 0.11477631330490112, "mean_matching_cosine": 0.8852236270904541}
+[oracle] {"step": 500, "loss": 0.10642895102500916, "mean_matching_cosine": 0.8935710787773132}
+[oracle] {"step": 550, "loss": 0.09915477782487869, "mean_matching_cosine": 0.9008452296257019}
+[oracle] {"step": 600, "loss": 0.09276090562343597, "mean_matching_cosine": 0.9072390794754028}
+[oracle] {"step": 650, "loss": 0.08709932118654251, "mean_matching_cosine": 0.9129007458686829}
+[oracle] {"step": 700, "loss": 0.08205384016036987, "mean_matching_cosine": 0.9179461598396301}
+[oracle] {"step": 750, "loss": 0.0775311067700386, "mean_matching_cosine": 0.922468900680542}
+[oracle] {"step": 800, "loss": 0.0734548419713974, "mean_matching_cosine": 0.9265450835227966}
+[oracle] {"step": 850, "loss": 0.06976186484098434, "mean_matching_cosine": 0.9302381277084351}
+[oracle] {"step": 900, "loss": 0.06639926880598068, "mean_matching_cosine": 0.9336007237434387}
+[oracle] {"step": 950, "loss": 0.06332246214151382, "mean_matching_cosine": 0.9366775155067444}
+[oracle] {"step": 1000, "loss": 0.060493748635053635, "mean_matching_cosine": 0.9395062923431396}
+[oracle] {"step": 1050, "loss": 0.057881131768226624, "mean_matching_cosine": 0.9421188831329346}
+[oracle] {"step": 1100, "loss": 0.055457450449466705, "mean_matching_cosine": 0.9445425868034363}
+[oracle] {"step": 1150, "loss": 0.05319961905479431, "mean_matching_cosine": 0.9468003511428833}
+[oracle] {"step": 1200, "loss": 0.05108800157904625, "mean_matching_cosine": 0.9489119648933411}
+[oracle] {"step": 1250, "loss": 0.04910585284233093, "mean_matching_cosine": 0.9508941769599915}
+[oracle] {"step": 1300, "loss": 0.04723888263106346, "mean_matching_cosine": 0.952761173248291}
+[oracle] {"step": 1350, "loss": 0.04547487571835518, "mean_matching_cosine": 0.9545251131057739}
+[oracle] {"step": 1400, "loss": 0.04380332678556442, "mean_matching_cosine": 0.9561966061592102}
+[oracle] {"step": 1450, "loss": 0.04221516475081444, "mean_matching_cosine": 0.9577848315238953}
+[oracle] {"step": 1500, "loss": 0.04070260748267174, "mean_matching_cosine": 0.9592973589897156}
+[oracle] {"step": 1550, "loss": 0.03925880044698715, "mean_matching_cosine": 0.9607412219047546}
+[oracle] {"step": 1600, "loss": 0.03787783905863762, "mean_matching_cosine": 0.9621221423149109}
+[oracle] {"step": 1650, "loss": 0.036554526537656784, "mean_matching_cosine": 0.9634454846382141}
+[oracle] {"step": 1700, "loss": 0.03528429567813873, "mean_matching_cosine": 0.9647157192230225}
+[oracle] {"step": 1750, "loss": 0.034063130617141724, "mean_matching_cosine": 0.9659368991851807}
+[oracle] {"step": 1800, "loss": 0.032887451350688934, "mean_matching_cosine": 0.9671125411987305}
+[oracle] {"step": 1850, "loss": 0.031754106283187866, "mean_matching_cosine": 0.9682458639144897}
+[oracle] {"step": 1900, "loss": 0.03066025674343109, "mean_matching_cosine": 0.9693396687507629}
+[oracle] {"step": 1950, "loss": 0.029603376984596252, "mean_matching_cosine": 0.9703966379165649}
+[oracle] {"step": 2000, "loss": 0.028581172227859497, "mean_matching_cosine": 0.9714188575744629}
+GTPROTO_ORACLE_PASS
+[PASS] 03_train_gtproto_oracle
+
+========================================================================
+[STEP] 04_audit_gtproto_oracle
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.94788800
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 04_audit_gtproto_oracle
+
+========================================================================
+[STEP] 05_eval_gtproto_oracle_116
+========================================================================
+/home/master/software/lyx/talk2dino_official_bg/lib/python3.10/site-packages/mmcv/__init__.py:20: UserWarning: On January 1, 2023, MMCV will release v2.0.0, in which it will remove components related to the training process and add a data transformation module. In addition, it will rename the package names mmcv to mmcv-lite and mmcv-full to mmcv. See https://github.com/open-mmlab/mmcv/blob/master/docs/en/compatibility.md for more details.
+  warnings.warn(
+Device: cuda
+RANK and WORLD_SIZE in environ: 0/1
+[2026-09-12 02:49:07 default](main.py 555): INFO Full config saved to output/textstruct_spearman_20260912_024827/eval/gtproto_oracle_direct116/config.json
+[2026-09-12 02:49:07 default](main.py 561): INFO Environment info:
+------------------------------------------------------------
+sys.platform: linux
+Python: 3.10.21 | packaged by conda-forge | (main, Aug 21 2026, 22:42:31) [GCC 14.4.0]
+CUDA available: True
+GPU 0: NVIDIA GeForce RTX 4090 D
+CUDA_HOME: /usr/local/cuda
+NVCC: Cuda compilation tools, release 12.2, V12.2.140
+GCC: gcc (Ubuntu 10.5.0-1ubuntu1~22.04.3) 10.5.0
+PyTorch: 2.1.0+cu118
+PyTorch compiling details: PyTorch built with:
+  - GCC 9.3
+  - C++ Version: 201703
+  - Intel(R) oneAPI Math Kernel Library Version 2022.2-Product Build 20220804 for Intel(R) 64 architecture applications
+  - Intel(R) MKL-DNN v3.1.1 (Git Hash 64f6bcbcbab628e96f33a62c3e975f8535a7bde4)
+  - OpenMP 201511 (a.k.a. OpenMP 4.5)
+  - LAPACK is enabled (usually provided by MKL)
+  - NNPACK is enabled
+  - CPU capability usage: AVX512
+  - CUDA Runtime 11.8
+  - NVCC architecture flags: -gencode;arch=compute_50,code=sm_50;-gencode;arch=compute_60,code=sm_60;-gencode;arch=compute_70,code=sm_70;-gencode;arch=compute_75,code=sm_75;-gencode;arch=compute_80,code=sm_80;-gencode;arch=compute_86,code=sm_86;-gencode;arch=compute_37,code=sm_37;-gencode;arch=compute_90,code=sm_90
+  - CuDNN 8.7
+  - Magma 2.6.1
+  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, CUDA_VERSION=11.8, CUDNN_VERSION=8.7.0, CXX_COMPILER=/opt/rh/devtoolset-9/root/usr/bin/c++, CXX_FLAGS= -D_GLIBCXX_USE_CXX11_ABI=0 -fabi-version=11 -fvisibility-inlines-hidden -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOROCTRACER -DUSE_FBGEMM -DUSE_QNNPACK -DUSE_PYTORCH_QNNPACK -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE -O2 -fPIC -Wall -Wextra -Werror=return-type -Werror=non-virtual-dtor -Werror=bool-operation -Wnarrowing -Wno-missing-field-initializers -Wno-type-limits -Wno-array-bounds -Wno-unknown-pragmas -Wno-unused-parameter -Wno-unused-function -Wno-unused-result -Wno-strict-overflow -Wno-strict-aliasing -Wno-stringop-overflow -Wno-psabi -Wno-error=pedantic -Wno-error=old-style-cast -Wno-invalid-partial-specialization -Wno-unused-private-field -Wno-aligned-allocation-unavailable -Wno-missing-braces -fdiagnostics-color=always -faligned-new -Wno-unused-but-set-variable -Wno-maybe-uninitialized -fno-math-errno -fno-trapping-math -Werror=format -Werror=cast-function-type -Wno-stringop-overflow, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, PERF_WITH_AVX512=1, TORCH_DISABLE_GPU_ASSERTS=ON, TORCH_VERSION=2.1.0, USE_CUDA=ON, USE_CUDNN=ON, USE_EXCEPTION_PTR=1, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=1, USE_NNPACK=ON, USE_OPENMP=ON, USE_ROCM=OFF, 
+
+TorchVision: 0.16.0+cu118
+OpenCV: 4.11.0
+MMCV: 1.7.2
+MMCV Compiler: GCC 9.3
+MMCV CUDA Compiler: 11.8
+------------------------------------------------------------
+
+[2026-09-12 02:49:07 default](main.py 563): INFO Git hash: 35d0b50
+[2026-09-12 02:49:07 default](main.py 566): INFO data:
+  batch_size: 256
+  pin_memory: true
+  num_workers: 0
+  seed: ${train.seed}
+  dataset:
+    meta:
+      gcc3m:
+        type: img_txt_pair
+        path: ./data/gcc3m
+        prefix: gcc-train-{000000..00347}.tar
+        length: 2881393
+      gcc12m:
+        type: img_txt_pair
+        path: ./data/gcc12m
+        prefix: cc-{000000..001175}.tar
+        length: 11286526
+    train:
+    - gcc3m
+    - gcc12m
+  img_aug:
+    deit_aug: true
+    img_size: 224
+    img_scale:
+    - 0.08
+    - 1.0
+    interpolation: bilinear
+    color_jitter: 0.4
+    auto_augment: rand-m9-mstd0.5-inc1
+    re_prob: 0.25
+    re_mode: pixel
+    re_count: 1
+  text_aug: null
+train:
+  start_step: 0
+  total_steps: 50000
+  warmup_steps: 20000
+  ust_steps: 0
+  base_lr: 0.0016
+  weight_decay: 0.05
+  min_lr: 4.0e-05
+  clip_grad: 5.0
+  fp16: true
+  fp16_comm: true
+  seed: 42
+  lr_scheduler:
+    name: cosine
+  optimizer:
+    name: adamw
+    eps: 1.0e-08
+    betas:
+    - 0.9
+    - 0.999
+evaluate:
+  pamr: false
+  bg_thresh: 0.4
+  kp_w: 0.0
+  save_logits: null
+  eval_only: true
+  eval_freq: 5000
+  template: sub_imagenet_template
+  task:
+  - voc116_part
+  voc116_part: src/open_vocabulary_segmentation/segmentation/configs/_base_/datasets/pascalpart116_part.py
+  pred_qual_path: null
+  gt_qual_path: null
+checkpoint:
+  resume: ''
+  save_topk: 0
+  save_all: false
+model_name: default
+output: output/textstruct_spearman_20260912_024827/eval/gtproto_oracle_direct116
+tag: default
+print_freq: 20
+seed: 42
+wandb: false
+_base_: default.yml
+model:
+  clip_model_name: ViT-B/16
+  keep_cls: false
+  keep_end_seq: false
+  model_name: dinov2_vitb14_reg
+  proj_class: vitb_mlp_infonce
+  proj_model: ProjectionLayer
+  proj_name: vitb_mlp_infonce_spearman_20260912_024827_gtproto_oracle
+  resize_dim: 448
+  type: DINOText
+  use_avg_text_token: false
+
+2026-09-12 02:49:07,616 - mmseg - INFO - Loaded 850 images
+[2026-09-12 02:49:07 default](main.py 184): INFO Creating model:DINOText/default
+/home/master/.cache/torch/hub/facebookresearch_dinov2_main/dinov2/layers/swiglu_ffn.py:51: UserWarning: xFormers is not available (SwiGLU)
+  warnings.warn("xFormers is not available (SwiGLU)")
+/home/master/.cache/torch/hub/facebookresearch_dinov2_main/dinov2/layers/attention.py:33: UserWarning: xFormers is not available (Attention)
+  warnings.warn("xFormers is not available (Attention)")
+/home/master/.cache/torch/hub/facebookresearch_dinov2_main/dinov2/layers/block.py:40: UserWarning: xFormers is not available (Block)
+  warnings.warn("xFormers is not available (Block)")
+[2026-09-12 02:49:11 default](main.py 201): INFO number of params: 984577 (1.0M)
+[2026-09-12 02:49:11 default](main.py 205): INFO GROUP_RANK = 0 | LOCAL_RANK = 0 | RANK = 0 | MASTER_ADDR = 127.0.0.1 | MASTER_PORT = 29920 | ROLE_RANK = 0 | LOCAL_WORLD_SIZE = 1 | WORLD_SIZE = 1 | ROLE_WORLD_SIZE = 1 | TORCHELASTIC_RESTART_COUNT = 0 | TORCHELASTIC_MAX_RESTARTS = 0 | TORCHELASTIC_RUN_ID = none
+[2026-09-12 02:49:11 default](main.py 212): INFO !!! Single-node setting :: skip fp16 compression hook
+[2026-09-12 02:49:11 default](main.py 418): INFO ### Validation dataset: voc116_part (Subset)
+[2026-09-12 02:49:12 default](dinotext_seg.py 44): INFO Building DINOTextSegInference with 116 classes, test_cfg=Config (path: None): {'mode': 'slide', 'stride': (224, 224), 'crop_size': (448, 448)}, with_bg=False, pamr=False, bg_thresh=0.4
+[                                                  ] 0/850, elapsed: 0s, ETA:[                                 ] 1/850, 2.2 task/s, elapsed: 0s, ETA:   393s[                                 ] 2/850, 4.0 task/s, elapsed: 0s, ETA:   210s[                                 ] 3/850, 5.7 task/s, elapsed: 1s, ETA:   149s[                                 ] 4/850, 7.1 task/s, elapsed: 1s, ETA:   119s[                                 ] 5/850, 8.4 task/s, elapsed: 1s, ETA:   100s[                                 ] 6/850, 7.9 task/s, elapsed: 1s, ETA:   107s[                                 ] 7/850, 7.8 task/s, elapsed: 1s, ETA:   108s[                                 ] 8/850, 8.5 task/s, elapsed: 1s, ETA:    99s[                                 ] 9/850, 9.3 task/s, elapsed: 1s, ETA:    91s[                                ] 10/850, 9.9 task/s, elapsed: 1s, ETA:    85s[                               ] 11/850, 10.4 task/s, elapsed: 1s, ETA:    80s[                               ] 12/850, 11.1 task/s, elapsed: 1s, ETA:    76s[                               ] 13/850, 11.5 task/s, elapsed: 1s, ETA:    73s[                               ] 14/850, 12.1 task/s, elapsed: 1s, ETA:    69s[                               ] 15/850, 12.6 task/s, elapsed: 1s, ETA:    66s[                               ] 16/850, 13.1 task/s, elapsed: 1s, ETA:    64s[                               ] 17/850, 13.6 task/s, elapsed: 1s, ETA:    61s[                               ] 18/850, 14.0 task/s, elapsed: 1s, ETA:    59s[                               ] 19/850, 14.5 task/s, elapsed: 1s, ETA:    57s[                               ] 20/850, 14.9 task/s, elapsed: 1s, ETA:    56s[                               ] 21/850, 15.3 task/s, elapsed: 1s, ETA:    54s[                               ] 22/850, 15.7 task/s, elapsed: 1s, ETA:    53s[                               ] 23/850, 16.0 task/s, elapsed: 1s, ETA:    52s[                               ] 24/850, 16.4 task/s, elapsed: 1s, ETA:    50s[                               ] 25/850, 16.6 task/s, elapsed: 2s, ETA:    50s[                               ] 26/850, 16.9 task/s, elapsed: 2s, ETA:    49s[                               ] 27/850, 17.1 task/s, elapsed: 2s, ETA:    48s[>                              ] 28/850, 17.3 task/s, elapsed: 2s, ETA:    48s[>                              ] 29/850, 15.5 task/s, elapsed: 2s, ETA:    53s[>                              ] 30/850, 15.8 task/s, elapsed: 2s, ETA:    52s[>                              ] 31/850, 16.0 task/s, elapsed: 2s, ETA:    51s[>                              ] 32/850, 16.2 task/s, elapsed: 2s, ETA:    51s[>                              ] 33/850, 16.4 task/s, elapsed: 2s, ETA:    50s[>                              ] 34/850, 16.5 task/s, elapsed: 2s, ETA:    49s[>                              ] 35/850, 16.8 task/s, elapsed: 2s, ETA:    49s[>                              ] 36/850, 16.9 task/s, elapsed: 2s, ETA:    48s[>                              ] 37/850, 17.1 task/s, elapsed: 2s, ETA:    47s[>                              ] 38/850, 17.4 task/s, elapsed: 2s, ETA:    47s[>                              ] 39/850, 17.5 task/s, elapsed: 2s, ETA:    46s[>                              ] 40/850, 17.6 task/s, elapsed: 2s, ETA:    46s[>                              ] 41/850, 17.8 task/s, elapsed: 2s, ETA:    45s[>                              ] 42/850, 17.9 task/s, elapsed: 2s, ETA:    45s[>                              ] 43/850, 18.1 task/s, elapsed: 2s, ETA:    45s[>                              ] 44/850, 18.3 task/s, elapsed: 2s, ETA:    44s[>                              ] 45/850, 18.5 task/s, elapsed: 2s, ETA:    44s[>                              ] 46/850, 18.6 task/s, elapsed: 2s, ETA:    43s[>                              ] 47/850, 18.8 task/s, elapsed: 3s, ETA:    43s[>                              ] 48/850, 18.9 task/s, elapsed: 3s, ETA:    42s[>                              ] 49/850, 19.0 task/s, elapsed: 3s, ETA:    42s[>                              ] 50/850, 19.2 task/s, elapsed: 3s, ETA:    42s[>                              ] 51/850, 19.4 task/s, elapsed: 3s, ETA:    41s[>                              ] 52/850, 19.5 task/s, elapsed: 3s, ETA:    41s[>                              ] 53/850, 19.7 task/s, elapsed: 3s, ETA:    41s[>                              ] 54/850, 19.8 task/s, elapsed: 3s, ETA:    40s[>>                             ] 55/850, 20.0 task/s, elapsed: 3s, ETA:    40s[>>                             ] 56/850, 20.1 task/s, elapsed: 3s, ETA:    39s[>>                             ] 57/850, 20.2 task/s, elapsed: 3s, ETA:    39s[>>                             ] 58/850, 20.3 task/s, elapsed: 3s, ETA:    39s[>>                             ] 59/850, 20.4 task/s, elapsed: 3s, ETA:    39s[>>                             ] 60/850, 20.6 task/s, elapsed: 3s, ETA:    38s[>>                             ] 61/850, 20.7 task/s, elapsed: 3s, ETA:    38s[>>                             ] 62/850, 20.7 task/s, elapsed: 3s, ETA:    38s[>>                             ] 63/850, 20.8 task/s, elapsed: 3s, ETA:    38s[>>                             ] 64/850, 21.0 task/s, elapsed: 3s, ETA:    37s[>>                             ] 65/850, 21.0 task/s, elapsed: 3s, ETA:    37s[>>                             ] 66/850, 21.1 task/s, elapsed: 3s, ETA:    37s[>>                             ] 67/850, 21.2 task/s, elapsed: 3s, ETA:    37s[>>                             ] 68/850, 21.3 task/s, elapsed: 3s, ETA:    37s[>>                             ] 69/850, 21.4 task/s, elapsed: 3s, ETA:    37s[>>                             ] 70/850, 21.4 task/s, elapsed: 3s, ETA:    36s[>>                             ] 71/850, 21.5 task/s, elapsed: 3s, ETA:    36s[>>                             ] 72/850, 21.6 task/s, elapsed: 3s, ETA:    36s[>>                             ] 73/850, 21.7 task/s, elapsed: 3s, ETA:    36s[>>                             ] 74/850, 21.8 task/s, elapsed: 3s, ETA:    36s[>>                             ] 75/850, 21.9 task/s, elapsed: 3s, ETA:    35s[>>                             ] 76/850, 22.0 task/s, elapsed: 3s, ETA:    35s[>>                             ] 77/850, 22.1 task/s, elapsed: 3s, ETA:    35s[>>                             ] 78/850, 22.1 task/s, elapsed: 4s, ETA:    35s[>>                             ] 79/850, 22.2 task/s, elapsed: 4s, ETA:    35s[>>                             ] 80/850, 22.2 task/s, elapsed: 4s, ETA:    35s[>>                             ] 81/850, 22.3 task/s, elapsed: 4s, ETA:    35s[>>                             ] 82/850, 22.3 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 83/850, 22.3 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 84/850, 22.4 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 85/850, 22.4 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 86/850, 22.5 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 87/850, 22.6 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 88/850, 22.6 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 89/850, 22.7 task/s, elapsed: 4s, ETA:    34s[>>>                            ] 90/850, 22.8 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 91/850, 22.8 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 92/850, 22.8 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 93/850, 22.9 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 94/850, 23.0 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 95/850, 23.0 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 96/850, 23.1 task/s, elapsed: 4s, ETA:    33s[>>>                            ] 97/850, 23.2 task/s, elapsed: 4s, ETA:    32s[>>>                            ] 98/850, 23.2 task/s, elapsed: 4s, ETA:    32s[>>>                            ] 99/850, 23.2 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 100/850, 23.3 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 101/850, 23.3 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 102/850, 23.4 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 103/850, 23.5 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 104/850, 23.5 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 105/850, 23.6 task/s, elapsed: 4s, ETA:    32s[>>>                           ] 106/850, 23.6 task/s, elapsed: 4s, ETA:    31s[>>>                           ] 107/850, 23.7 task/s, elapsed: 5s, ETA:    31s[>>>                           ] 108/850, 23.8 task/s, elapsed: 5s, ETA:    31s[>>>                           ] 109/850, 23.8 task/s, elapsed: 5s, ETA:    31s[>>>                           ] 110/850, 23.8 task/s, elapsed: 5s, ETA:    31s[>>>                           ] 111/850, 23.8 task/s, elapsed: 5s, ETA:    31s[>>>                           ] 112/850, 23.8 task/s, elapsed: 5s, ETA:    31s[>>>                           ] 113/850, 23.8 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 114/850, 23.9 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 115/850, 24.0 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 116/850, 24.0 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 117/850, 24.0 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 118/850, 24.1 task/s, elapsed: 5s, ETA:    30s[>>>>                          ] 119/850, 24.1 task/s, elapsed: 5s, ETA:    30s[>>>>                          ] 120/850, 22.9 task/s, elapsed: 5s, ETA:    32s[>>>>                          ] 121/850, 23.0 task/s, elapsed: 5s, ETA:    32s[>>>>                          ] 122/850, 23.0 task/s, elapsed: 5s, ETA:    32s[>>>>                          ] 123/850, 23.1 task/s, elapsed: 5s, ETA:    32s[>>>>                          ] 124/850, 23.1 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 125/850, 23.2 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 126/850, 23.2 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 127/850, 23.3 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 128/850, 23.3 task/s, elapsed: 5s, ETA:    31s[>>>>                          ] 129/850, 23.4 task/s, elapsed: 6s, ETA:    31s[>>>>                          ] 130/850, 23.4 task/s, elapsed: 6s, ETA:    31s[>>>>                          ] 131/850, 23.4 task/s, elapsed: 6s, ETA:    31s[>>>>                          ] 132/850, 23.5 task/s, elapsed: 6s, ETA:    31s[>>>>                          ] 133/850, 23.5 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 134/850, 23.6 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 135/850, 23.6 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 136/850, 23.7 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 137/850, 23.7 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 138/850, 23.7 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 139/850, 23.7 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 140/850, 23.8 task/s, elapsed: 6s, ETA:    30s[>>>>                          ] 141/850, 23.8 task/s, elapsed: 6s, ETA:    30s[>>>>>                         ] 142/850, 23.9 task/s, elapsed: 6s, ETA:    30s[>>>>>                         ] 143/850, 23.9 task/s, elapsed: 6s, ETA:    30s[>>>>>                         ] 144/850, 23.9 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 145/850, 24.0 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 146/850, 24.0 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 147/850, 24.0 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 148/850, 24.1 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 149/850, 24.1 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 150/850, 24.1 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 151/850, 24.2 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 152/850, 24.2 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 153/850, 24.2 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 154/850, 24.0 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 155/850, 24.0 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 156/850, 24.1 task/s, elapsed: 6s, ETA:    29s[>>>>>                         ] 157/850, 24.1 task/s, elapsed: 7s, ETA:    29s[>>>>>                         ] 158/850, 24.1 task/s, elapsed: 7s, ETA:    29s[>>>>>                         ] 159/850, 24.2 task/s, elapsed: 7s, ETA:    29s[>>>>>                         ] 160/850, 24.2 task/s, elapsed: 7s, ETA:    29s[>>>>>                         ] 161/850, 24.2 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 162/850, 24.2 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 163/850, 24.3 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 164/850, 24.3 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 165/850, 24.3 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 166/850, 24.3 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 167/850, 24.3 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 168/850, 24.4 task/s, elapsed: 7s, ETA:    28s[>>>>>                         ] 169/850, 24.4 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 170/850, 24.4 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 171/850, 24.4 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 172/850, 24.5 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 173/850, 24.5 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 174/850, 24.5 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 175/850, 24.5 task/s, elapsed: 7s, ETA:    28s[>>>>>>                        ] 176/850, 24.5 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 177/850, 24.6 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 178/850, 24.6 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 179/850, 24.7 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 180/850, 24.6 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 181/850, 24.7 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 182/850, 24.7 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 183/850, 24.7 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 184/850, 24.7 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 185/850, 24.8 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 186/850, 24.8 task/s, elapsed: 7s, ETA:    27s[>>>>>>                        ] 187/850, 24.8 task/s, elapsed: 8s, ETA:    27s[>>>>>>                        ] 188/850, 24.8 task/s, elapsed: 8s, ETA:    27s[>>>>>>                        ] 189/850, 24.9 task/s, elapsed: 8s, ETA:    27s[>>>>>>                        ] 190/850, 24.9 task/s, elapsed: 8s, ETA:    27s[>>>>>>                        ] 191/850, 24.9 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 192/850, 25.0 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 193/850, 25.0 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 194/850, 25.0 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 195/850, 25.1 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 196/850, 25.1 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 197/850, 25.1 task/s, elapsed: 8s, ETA:    26s[>>>>>>                        ] 198/850, 25.2 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 199/850, 25.2 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 200/850, 25.2 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 201/850, 25.2 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 202/850, 25.2 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 203/850, 25.3 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 204/850, 25.3 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 205/850, 25.3 task/s, elapsed: 8s, ETA:    26s[>>>>>>>                       ] 206/850, 25.3 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 207/850, 25.3 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 208/850, 25.3 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 209/850, 25.3 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 210/850, 25.4 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 211/850, 25.4 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 212/850, 25.4 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 213/850, 25.4 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 214/850, 25.4 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 215/850, 25.5 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 216/850, 25.5 task/s, elapsed: 8s, ETA:    25s[>>>>>>>                       ] 217/850, 25.5 task/s, elapsed: 9s, ETA:    25s[>>>>>>>                       ] 218/850, 25.5 task/s, elapsed: 9s, ETA:    25s[>>>>>>>                       ] 219/850, 25.6 task/s, elapsed: 9s, ETA:    25s[>>>>>>>                       ] 220/850, 25.6 task/s, elapsed: 9s, ETA:    25s[>>>>>>>                       ] 221/850, 25.6 task/s, elapsed: 9s, ETA:    25s[>>>>>>>                       ] 222/850, 25.6 task/s, elapsed: 9s, ETA:    25s[>>>>>>>                       ] 223/850, 25.6 task/s, elapsed: 9s, ETA:    24s[>>>>>>>                       ] 224/850, 25.6 task/s, elapsed: 9s, ETA:    24s[>>>>>>>                       ] 225/850, 25.6 task/s, elapsed: 9s, ETA:    24s[>>>>>>>                       ] 226/850, 25.6 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 227/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 228/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 229/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 230/850, 25.6 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 231/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 232/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 233/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 234/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 235/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 236/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 237/850, 25.7 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 238/850, 25.8 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 239/850, 25.8 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 240/850, 25.8 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 241/850, 25.8 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 242/850, 25.8 task/s, elapsed: 9s, ETA:    24s[>>>>>>>>                      ] 243/850, 25.8 task/s, elapsed: 9s, ETA:    23s[>>>>>>>>                      ] 244/850, 25.8 task/s, elapsed: 9s, ETA:    23s[>>>>>>>>                      ] 245/850, 25.9 task/s, elapsed: 9s, ETA:    23s[>>>>>>>>                     ] 246/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 247/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 248/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 249/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 250/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 251/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 252/850, 25.9 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 253/850, 26.0 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 254/850, 26.0 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 255/850, 26.0 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 256/850, 26.0 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 257/850, 26.0 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 258/850, 26.1 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 259/850, 26.1 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 260/850, 26.1 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 261/850, 26.1 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 262/850, 26.1 task/s, elapsed: 10s, ETA:    23s[>>>>>>>>                     ] 263/850, 26.1 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 264/850, 26.1 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 265/850, 26.1 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 266/850, 26.2 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 267/850, 26.2 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 268/850, 26.2 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 269/850, 26.2 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 270/850, 26.2 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 271/850, 26.3 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 272/850, 26.3 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 273/850, 26.2 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 274/850, 26.3 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 275/850, 26.3 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 276/850, 26.3 task/s, elapsed: 10s, ETA:    22s[>>>>>>>>>                    ] 277/850, 26.3 task/s, elapsed: 11s, ETA:    22s[>>>>>>>>>                    ] 278/850, 26.3 task/s, elapsed: 11s, ETA:    22s[>>>>>>>>>                    ] 279/850, 26.4 task/s, elapsed: 11s, ETA:    22s[>>>>>>>>>                    ] 280/850, 26.4 task/s, elapsed: 11s, ETA:    22s[>>>>>>>>>                    ] 281/850, 26.4 task/s, elapsed: 11s, ETA:    22s[>>>>>>>>>                    ] 282/850, 26.4 task/s, elapsed: 11s, ETA:    22s[>>>>>>>>>                    ] 283/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 284/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 285/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 286/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 287/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 288/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 289/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 290/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 291/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 292/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>                    ] 293/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 294/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 295/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 296/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 297/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 298/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 299/850, 26.4 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 300/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 301/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 302/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 303/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 304/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 305/850, 26.5 task/s, elapsed: 11s, ETA:    21s[>>>>>>>>>>                   ] 306/850, 26.5 task/s, elapsed: 12s, ETA:    21s[>>>>>>>>>>                   ] 307/850, 26.5 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 308/850, 26.5 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 309/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 310/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 311/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 312/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 313/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 314/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 315/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 316/850, 26.6 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 317/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 318/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 319/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 320/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 321/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>                   ] 322/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 323/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 324/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 325/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 326/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 327/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 328/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 329/850, 26.7 task/s, elapsed: 12s, ETA:    20s[>>>>>>>>>>>                  ] 330/850, 26.7 task/s, elapsed: 12s, ETA:    19s[>>>>>>>>>>>                  ] 331/850, 26.7 task/s, elapsed: 12s, ETA:    19s[>>>>>>>>>>>                  ] 332/850, 26.7 task/s, elapsed: 12s, ETA:    19s[>>>>>>>>>>>                  ] 333/850, 26.7 task/s, elapsed: 12s, ETA:    19s[>>>>>>>>>>>                  ] 334/850, 26.8 task/s, elapsed: 12s, ETA:    19s[>>>>>>>>>>>                  ] 335/850, 26.7 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 336/850, 26.8 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 337/850, 26.8 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 338/850, 26.8 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 339/850, 26.8 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 340/850, 26.8 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 341/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 342/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 343/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 344/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 345/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 346/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 347/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 348/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 349/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 350/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>                  ] 351/850, 26.9 task/s, elapsed: 13s, ETA:    19s[>>>>>>>>>>>>                 ] 352/850, 26.9 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 353/850, 26.9 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 354/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 355/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 356/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 357/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 358/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 359/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 360/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 361/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 362/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 363/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 364/850, 27.0 task/s, elapsed: 13s, ETA:    18s[>>>>>>>>>>>>                 ] 365/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 366/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 367/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 368/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 369/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 370/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 371/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 372/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 373/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 374/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 375/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 376/850, 27.0 task/s, elapsed: 14s, ETA:    18s[>>>>>>>>>>>>                 ] 377/850, 27.0 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>                 ] 378/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>                 ] 379/850, 27.0 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>                 ] 380/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>                 ] 381/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 382/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 383/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 384/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 385/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 386/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 387/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 388/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 389/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 390/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 391/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 392/850, 27.1 task/s, elapsed: 14s, ETA:    17s[>>>>>>>>>>>>>                ] 393/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 394/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 395/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 396/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 397/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 398/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 399/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 400/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 401/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 402/850, 27.1 task/s, elapsed: 15s, ETA:    17s[>>>>>>>>>>>>>                ] 403/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 404/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 405/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 406/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 407/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 408/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 409/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>                ] 410/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 411/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 412/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 413/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 414/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 415/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 416/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 417/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 418/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 419/850, 27.1 task/s, elapsed: 15s, ETA:    16s[>>>>>>>>>>>>>>               ] 420/850, 27.1 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 421/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 422/850, 27.1 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 423/850, 27.1 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 424/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 425/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 426/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 427/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 428/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 429/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 430/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 431/850, 27.0 task/s, elapsed: 16s, ETA:    16s[>>>>>>>>>>>>>>               ] 432/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 433/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 434/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 435/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 436/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 437/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 438/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>               ] 439/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 440/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 441/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 442/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 443/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 444/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 445/850, 27.0 task/s, elapsed: 16s, ETA:    15s[>>>>>>>>>>>>>>>              ] 446/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 447/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 448/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 449/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 450/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 451/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 452/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 453/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 454/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 455/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 456/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 457/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 458/850, 27.0 task/s, elapsed: 17s, ETA:    15s[>>>>>>>>>>>>>>>              ] 459/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 460/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 461/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 462/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 463/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 464/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 465/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 466/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 467/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>              ] 468/850, 27.0 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 469/850, 27.1 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 470/850, 27.1 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 471/850, 27.1 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 472/850, 27.1 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 473/850, 27.1 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 474/850, 27.1 task/s, elapsed: 17s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 475/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 476/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 477/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 478/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 479/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 480/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 481/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 482/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 483/850, 27.1 task/s, elapsed: 18s, ETA:    14s[>>>>>>>>>>>>>>>>             ] 484/850, 27.1 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 485/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 486/850, 27.1 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 487/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 488/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 489/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 490/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 491/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 492/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 493/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 494/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 495/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 496/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 497/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>             ] 498/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 499/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 500/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 501/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 502/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 503/850, 27.2 task/s, elapsed: 18s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 504/850, 27.2 task/s, elapsed: 19s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 505/850, 27.2 task/s, elapsed: 19s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 506/850, 27.2 task/s, elapsed: 19s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 507/850, 27.3 task/s, elapsed: 19s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 508/850, 27.3 task/s, elapsed: 19s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 509/850, 27.3 task/s, elapsed: 19s, ETA:    13s[>>>>>>>>>>>>>>>>>            ] 510/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 511/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 512/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 513/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 514/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 515/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 516/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 517/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 518/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 519/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 520/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 521/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 522/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 523/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 524/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 525/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 526/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>            ] 527/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 528/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 529/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 530/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 531/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 532/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 533/850, 27.3 task/s, elapsed: 19s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 534/850, 27.3 task/s, elapsed: 20s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 535/850, 27.3 task/s, elapsed: 20s, ETA:    12s[>>>>>>>>>>>>>>>>>>           ] 536/850, 27.3 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 537/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 538/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 539/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 540/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 541/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 542/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 543/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 544/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 545/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 546/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 547/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 548/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 549/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 550/850, 27.4 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 551/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 552/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 553/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 554/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 555/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>           ] 556/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>>          ] 557/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>>          ] 558/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>>          ] 559/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>>          ] 560/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>>          ] 561/850, 27.5 task/s, elapsed: 20s, ETA:    11s[>>>>>>>>>>>>>>>>>>>          ] 562/850, 27.5 task/s, elapsed: 20s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 563/850, 27.5 task/s, elapsed: 20s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 564/850, 27.5 task/s, elapsed: 20s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 565/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 566/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 567/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 568/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 569/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 570/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 571/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 572/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 573/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 574/850, 27.5 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 575/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 576/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 577/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 578/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 579/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 580/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 581/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 582/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 583/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 584/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 585/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>          ] 586/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>         ] 587/850, 27.6 task/s, elapsed: 21s, ETA:    10s[>>>>>>>>>>>>>>>>>>>>         ] 588/850, 27.6 task/s, elapsed: 21s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 589/850, 27.6 task/s, elapsed: 21s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 590/850, 27.6 task/s, elapsed: 21s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 591/850, 27.6 task/s, elapsed: 21s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 592/850, 27.6 task/s, elapsed: 21s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 593/850, 27.6 task/s, elapsed: 21s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 594/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 595/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 596/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 597/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 598/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 599/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 600/850, 27.6 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 601/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 602/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 603/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 604/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 605/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 606/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 607/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 608/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 609/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 610/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 611/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 612/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 613/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 614/850, 27.7 task/s, elapsed: 22s, ETA:     9s[>>>>>>>>>>>>>>>>>>>>         ] 615/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 616/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 617/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 618/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 619/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 620/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 621/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 622/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 623/850, 27.7 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 624/850, 27.8 task/s, elapsed: 22s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 625/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 626/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 627/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 628/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 629/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 630/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 631/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 632/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 633/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 634/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 635/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 636/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 637/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 638/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 639/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 640/850, 27.8 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 641/850, 27.9 task/s, elapsed: 23s, ETA:     8s[>>>>>>>>>>>>>>>>>>>>>        ] 642/850, 27.8 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>        ] 643/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>        ] 644/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 645/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 646/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 647/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 648/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 649/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 650/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 651/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 652/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 653/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 654/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 655/850, 27.9 task/s, elapsed: 23s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 656/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 657/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 658/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 659/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 660/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 661/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 662/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 663/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 664/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 665/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 666/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 667/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 668/850, 27.9 task/s, elapsed: 24s, ETA:     7s[>>>>>>>>>>>>>>>>>>>>>>       ] 669/850, 27.9 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>       ] 670/850, 27.9 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>       ] 671/850, 27.9 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>       ] 672/850, 27.9 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>       ] 673/850, 27.9 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>       ] 674/850, 27.9 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 675/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 676/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 677/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 678/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 679/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 680/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 681/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 682/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 683/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 684/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 685/850, 28.0 task/s, elapsed: 24s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 686/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 687/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 688/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 689/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 690/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 691/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 692/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 693/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 694/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 695/850, 28.0 task/s, elapsed: 25s, ETA:     6s[>>>>>>>>>>>>>>>>>>>>>>>      ] 696/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 697/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 698/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 699/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 700/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 701/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 702/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>      ] 703/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 704/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 705/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 706/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 707/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 708/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 709/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 710/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 711/850, 28.0 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 712/850, 28.1 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 713/850, 28.1 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 714/850, 28.1 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 715/850, 28.1 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 716/850, 28.1 task/s, elapsed: 25s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 717/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 718/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 719/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 720/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 721/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 722/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 723/850, 28.1 task/s, elapsed: 26s, ETA:     5s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 724/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 725/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 726/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 727/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 728/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 729/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 730/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 731/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>     ] 732/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 733/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 734/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 735/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 736/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 737/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 738/850, 28.2 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 739/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 740/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 741/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 742/850, 28.1 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 743/850, 28.2 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 744/850, 28.2 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 745/850, 28.2 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 746/850, 28.2 task/s, elapsed: 26s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 747/850, 28.2 task/s, elapsed: 27s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 748/850, 28.2 task/s, elapsed: 27s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 749/850, 28.2 task/s, elapsed: 27s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 750/850, 28.2 task/s, elapsed: 27s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 751/850, 28.2 task/s, elapsed: 27s, ETA:     4s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 752/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 753/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 754/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 755/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 756/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 757/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 758/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 759/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 760/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 761/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>    ] 762/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 763/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 764/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 765/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 766/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 767/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 768/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 769/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 770/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 771/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 772/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 773/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 774/850, 28.2 task/s, elapsed: 27s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 775/850, 28.2 task/s, elapsed: 28s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 776/850, 28.2 task/s, elapsed: 28s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 777/850, 28.2 task/s, elapsed: 28s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 778/850, 28.2 task/s, elapsed: 28s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 779/850, 28.2 task/s, elapsed: 28s, ETA:     3s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 780/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 781/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 782/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 783/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 784/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 785/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 786/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 787/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 788/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 789/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 790/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>   ] 791/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 792/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 793/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 794/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 795/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 796/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 797/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 798/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 799/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 800/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 801/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 802/850, 28.2 task/s, elapsed: 28s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 803/850, 28.2 task/s, elapsed: 29s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 804/850, 28.2 task/s, elapsed: 29s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 805/850, 28.2 task/s, elapsed: 29s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 806/850, 28.2 task/s, elapsed: 29s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 807/850, 28.2 task/s, elapsed: 29s, ETA:     2s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 808/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 809/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 810/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 811/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 812/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 813/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 814/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 815/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 816/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 817/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 818/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 819/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>  ] 820/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 821/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 822/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 823/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 824/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 825/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 826/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 827/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 828/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 829/850, 28.1 task/s, elapsed: 29s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 830/850, 28.1 task/s, elapsed: 30s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 831/850, 28.1 task/s, elapsed: 30s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 832/850, 28.1 task/s, elapsed: 30s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 833/850, 28.1 task/s, elapsed: 30s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 834/850, 28.1 task/s, elapsed: 30s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 835/850, 28.1 task/s, elapsed: 30s, ETA:     1s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 836/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 837/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 838/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 839/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 840/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 841/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 842/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 843/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 844/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 845/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 846/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 847/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 848/850, 28.1 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>> ] 849/850, 28.0 task/s, elapsed: 30s, ETA:     0s[>>>>>>>>>>>>>>>>>>>>>>>>>>>>>] 850/850, 28.0 task/s, elapsed: 30s, ETA:     0s[2026-09-12 02:49:42 default](logging.py 102): INFO per class results:
+[2026-09-12 02:49:42 default](logging.py 102): INFO 
++-----------------------+-------+-------+
+|         Class         |  IoU  |  Acc  |
++-----------------------+-------+-------+
+|    aeroplane's body   | 69.55 | 77.77 |
+|   aeroplane's stern   |  55.4 | 69.25 |
+|    aeroplane's wing   |  61.1 | 86.02 |
+|    aeroplane's tail   |  0.01 | 100.0 |
+|   aeroplane's engine  | 65.51 | 85.38 |
+|   aeroplane's wheel   | 42.91 | 96.75 |
+|    bicycle's wheel    | 81.61 | 84.27 |
+|    bicycle's saddle   | 86.69 | 96.75 |
+|  bicycle's handlebar  | 69.67 | 98.25 |
+|  bicycle's chainwheel | 48.93 | 93.24 |
+|  bicycle's headlight  |  0.0  |  nan  |
+|      bird's wing      | 34.32 | 81.06 |
+|      bird's tail      | 56.25 | 89.85 |
+|      bird's head      | 45.76 | 47.65 |
+|       bird's eye      | 17.78 | 95.39 |
+|      bird's beak      | 47.56 | 97.23 |
+|      bird's torso     | 51.14 | 52.76 |
+|      bird's neck      | 17.92 |  92.0 |
+|       bird's leg      | 37.85 | 82.25 |
+|      bird's foot      | 59.29 | 91.38 |
+|     bottle's body     | 89.84 | 90.69 |
+|      bottle's cap     | 38.34 | 97.22 |
+|      bus's wheel      | 46.74 | 87.42 |
+|    bus's headlight    | 15.33 | 94.58 |
+|      bus's front      | 40.46 | 42.31 |
+|       bus's side      | 47.15 | 51.21 |
+|       bus's back      | 45.76 | 57.17 |
+|       bus's roof      |  1.56 | 98.79 |
+|      bus's mirror     | 15.14 | 91.17 |
+|  bus's license plate  |  0.03 | 100.0 |
+|       bus's door      | 35.52 | 70.41 |
+|      bus's window     | 62.66 | 85.18 |
+|      car's wheel      | 75.87 | 95.25 |
+|    car's headlight    | 23.39 | 98.75 |
+|      car's front      | 48.31 | 50.02 |
+|       car's side      | 35.23 | 36.95 |
+|       car's back      | 55.49 | 69.65 |
+|       car's roof      | 26.01 | 86.77 |
+|      car's mirror     | 17.49 | 98.54 |
+|  car's license plate  |  0.07 | 73.39 |
+|       car's door      | 49.97 | 82.66 |
+|      car's window     | 65.57 | 85.21 |
+|       cat's tail      | 48.47 | 91.37 |
+|       cat's head      |  51.8 | 54.08 |
+|       cat's eye       | 27.44 | 96.05 |
+|      cat's torso      | 65.31 | 70.81 |
+|       cat's neck      | 27.46 | 76.36 |
+|       cat's leg       | 45.47 | 58.08 |
+|       cat's nose      |  9.32 | 99.04 |
+|       cat's paw       | 52.69 | 91.57 |
+|       cat's ear       | 68.19 |  93.6 |
+|       cow's tail      | 20.08 | 98.42 |
+|       cow's head      |  52.3 | 57.57 |
+|       cow's eye       | 12.41 | 97.33 |
+|      cow's torso      | 67.37 | 69.34 |
+|       cow's neck      | 13.73 | 70.52 |
+|       cow's leg       | 50.35 | 78.87 |
+|       cow's ear       | 64.41 | 90.69 |
+|      cow's muzzle     |  75.7 | 81.92 |
+|       cow's horn      | 66.07 | 98.31 |
+|       dog's tail      | 33.15 | 98.77 |
+|       dog's head      | 56.05 | 60.48 |
+|       dog's eye       | 16.57 | 98.54 |
+|      dog's torso      |  61.9 | 67.15 |
+|       dog's neck      | 25.22 | 87.29 |
+|       dog's leg       |  53.8 | 65.85 |
+|       dog's nose      |  38.8 | 98.48 |
+|       dog's paw       | 61.56 |  90.1 |
+|       dog's ear       | 62.98 | 80.32 |
+|      dog's muzzle     | 60.83 |  74.0 |
+|      horse's tail     | 49.88 | 91.91 |
+|      horse's head     | 61.94 | 68.56 |
+|      horse's eye      | 13.31 | 92.67 |
+|     horse's torso     | 69.94 | 73.68 |
+|      horse's neck     |  60.8 | 88.29 |
+|      horse's leg      | 63.04 | 74.71 |
+|      horse's ear      | 57.01 | 94.57 |
+|     horse's muzzle    | 78.91 | 91.92 |
+|      horse's hoof     |  20.3 | 99.71 |
+|   motorbike's wheel   | 95.49 |  96.0 |
+|   motorbike's saddle  |  0.0  |  nan  |
+| motorbike's handlebar |  4.14 |  79.2 |
+| motorbike's headlight |  63.7 | 67.61 |
+|     person's head     | 17.44 | 18.34 |
+|      person's eye     | 15.23 | 43.36 |
+|     person's torso    | 68.46 | 75.79 |
+|     person's neck     | 38.87 | 91.77 |
+|      person's leg     | 69.01 | 75.64 |
+|     person's foot     | 54.28 | 92.28 |
+|     person's nose     | 48.12 | 70.49 |
+|      person's ear     | 26.25 | 89.74 |
+|    person's eyebrow   |  4.65 | 92.46 |
+|     person's mouth    | 14.35 | 98.34 |
+|     person's hair     |  70.8 |  86.8 |
+|   person's lower arm  | 51.24 | 70.64 |
+|   person's upper arm  | 59.74 | 77.35 |
+|     person's hand     | 56.88 | 79.45 |
+|   pottedplant's pot   | 74.07 | 83.54 |
+|  pottedplant's plant  | 83.91 | 93.65 |
+|      sheep's tail     | 12.11 | 100.0 |
+|      sheep's head     | 47.94 | 52.96 |
+|      sheep's eye      |  9.41 | 90.03 |
+|     sheep's torso     | 69.13 |  70.1 |
+|      sheep's neck     | 33.86 | 84.27 |
+|      sheep's leg      | 51.98 | 78.92 |
+|      sheep's ear      | 58.86 | 85.55 |
+|     sheep's muzzle    | 70.35 | 92.84 |
+|      sheep's horn     | 35.08 |  84.7 |
+|   train's headlight   |  1.16 |  89.2 |
+|      train's head     |  7.82 | 17.32 |
+|     train's front     | 67.35 | 72.24 |
+|      train's side     | 44.52 | 48.94 |
+|      train's back     |  22.4 | 82.74 |
+|      train's roof     |  9.7  | 66.11 |
+|     train's coach     | 39.36 |  59.9 |
+|   tvmonitor's screen  | 89.71 |  90.3 |
++-----------------------+-------+-------+
+[2026-09-12 02:49:42 default](logging.py 102): INFO Summary:
+[2026-09-12 02:49:42 default](logging.py 102): INFO 
++-------+-------+-------+
+|  aAcc |  mIoU |  mAcc |
++-------+-------+-------+
+| 70.77 | 44.29 | 80.53 |
++-------+-------+-------+
+[2026-09-12 02:49:42 default](main.py 422): INFO [voc116_part] mIoU of 850 test images: 44.29%
+[2026-09-12 02:49:42 default](main.py 222): INFO {'val/voc116_part_miou': 44.29, 'metrics': [{'aAcc': 0.7077, 'mIoU': 0.4429, 'mAcc': 0.8053, "IoU.aeroplane's body": 0.6955000305175781, "IoU.aeroplane's stern": 0.5540000152587891, "IoU.aeroplane's wing": 0.610999984741211, "IoU.aeroplane's tail": 9.999999776482581e-05, "IoU.aeroplane's engine": 0.6551000213623047, "IoU.aeroplane's wheel": 0.4290999984741211, "IoU.bicycle's wheel": 0.8161000061035156, "IoU.bicycle's saddle": 0.8669000244140626, "IoU.bicycle's handlebar": 0.6966999816894531, "IoU.bicycle's chainwheel": 0.4893000030517578, "IoU.bicycle's headlight": 0.0, "IoU.bird's wing": 0.3431999969482422, "IoU.bird's tail": 0.5625, "IoU.bird's head": 0.457599983215332, "IoU.bird's eye": 0.17780000686645508, "IoU.bird's beak": 0.47560001373291017, "IoU.bird's torso": 0.5113999938964844, "IoU.bird's neck": 0.17920000076293946, "IoU.bird's leg": 0.37849998474121094, "IoU.bird's foot": 0.5929000091552734, "IoU.bottle's body": 0.8983999633789063, "IoU.bottle's cap": 0.3834000015258789, "IoU.bus's wheel": 0.46740001678466797, "IoU.bus's headlight": 0.15329999923706056, "IoU.bus's front": 0.4045999908447266, "IoU.bus's side": 0.47150001525878904, "IoU.bus's back": 0.457599983215332, "IoU.bus's roof": 0.01559999942779541, "IoU.bus's mirror": 0.15140000343322754, "IoU.bus's license plate": 0.00029999999329447744, "IoU.bus's door": 0.35520000457763673, "IoU.bus's window": 0.6265999984741211, "IoU.car's wheel": 0.7587000274658203, "IoU.car's headlight": 0.2338999938964844, "IoU.car's front": 0.48310001373291017, "IoU.car's side": 0.3522999954223633, "IoU.car's back": 0.5549000167846679, "IoU.car's roof": 0.26010000228881835, "IoU.car's mirror": 0.17489999771118164, "IoU.car's license plate": 0.0007000000029802323, "IoU.car's door": 0.49970001220703125, "IoU.car's window": 0.6556999969482422, "IoU.cat's tail": 0.48470001220703124, "IoU.cat's head": 0.5179999923706055, "IoU.cat's eye": 0.2744000053405762, "IoU.cat's torso": 0.6530999755859375, "IoU.cat's neck": 0.2745999908447266, "IoU.cat's leg": 0.45470001220703127, "IoU.cat's nose": 0.09319999694824219, "IoU.cat's paw": 0.5268999862670899, "IoU.cat's ear": 0.6819000244140625, "IoU.cow's tail": 0.20079999923706054, "IoU.cow's head": 0.5229999923706055, "IoU.cow's eye": 0.12409999847412109, "IoU.cow's torso": 0.6737000274658204, "IoU.cow's neck": 0.1372999954223633, "IoU.cow's leg": 0.5034999847412109, "IoU.cow's ear": 0.6441000366210937, "IoU.cow's muzzle": 0.7569999694824219, "IoU.cow's horn": 0.6606999969482422, "IoU.dog's tail": 0.3315000152587891, "IoU.dog's head": 0.5604999923706054, "IoU.dog's eye": 0.1656999969482422, "IoU.dog's torso": 0.6190000152587891, "IoU.dog's neck": 0.2521999931335449, "IoU.dog's leg": 0.5379999923706055, "IoU.dog's nose": 0.38799999237060545, "IoU.dog's paw": 0.6156000137329102, "IoU.dog's ear": 0.6297999954223633, "IoU.dog's muzzle": 0.6083000183105469, "IoU.horse's tail": 0.4988000106811523, "IoU.horse's head": 0.6193999862670898, "IoU.horse's eye": 0.133100004196167, "IoU.horse's torso": 0.6994000244140625, "IoU.horse's neck": 0.6079999923706054, "IoU.horse's leg": 0.6304000091552734, "IoU.horse's ear": 0.5700999832153321, "IoU.horse's muzzle": 0.7891000366210937, "IoU.horse's hoof": 0.20299999237060548, "IoU.motorbike's wheel": 0.9548999786376953, "IoU.motorbike's saddle": 0.0, "IoU.motorbike's handlebar": 0.041399998664855955, "IoU.motorbike's headlight": 0.6370000076293946, "IoU.person's head": 0.17440000534057618, "IoU.person's eye": 0.15229999542236328, "IoU.person's torso": 0.6845999908447266, "IoU.person's neck": 0.38869998931884764, "IoU.person's leg": 0.6901000213623046, "IoU.person's foot": 0.5427999877929688, "IoU.person's nose": 0.48119998931884767, "IoU.person's ear": 0.2625, "IoU.person's eyebrow": 0.04650000095367432, "IoU.person's mouth": 0.14350000381469727, "IoU.person's hair": 0.7080000305175781, "IoU.person's lower arm": 0.512400016784668, "IoU.person's upper arm": 0.5974000167846679, "IoU.person's hand": 0.5688000106811524, "IoU.pottedplant's pot": 0.7406999969482422, "IoU.pottedplant's plant": 0.8391000366210938, "IoU.sheep's tail": 0.12109999656677246, "IoU.sheep's head": 0.47939998626708985, "IoU.sheep's eye": 0.0940999984741211, "IoU.sheep's torso": 0.6912999725341797, "IoU.sheep's neck": 0.33860000610351565, "IoU.sheep's leg": 0.5197999954223633, "IoU.sheep's ear": 0.5886000061035156, "IoU.sheep's muzzle": 0.7034999847412109, "IoU.sheep's horn": 0.35080001831054686, "IoU.train's headlight": 0.01159999966621399, "IoU.train's head": 0.07820000171661377, "IoU.train's front": 0.673499984741211, "IoU.train's side": 0.4452000045776367, "IoU.train's back": 0.22399999618530272, "IoU.train's roof": 0.09699999809265136, "IoU.train's coach": 0.39360000610351564, "IoU.tvmonitor's screen": 0.8970999908447266, "Acc.aeroplane's body": 0.7776999664306641, "Acc.aeroplane's stern": 0.6925, "Acc.aeroplane's wing": 0.8601999664306641, "Acc.aeroplane's tail": 1.0, "Acc.aeroplane's engine": 0.8537999725341797, "Acc.aeroplane's wheel": 0.9675, "Acc.bicycle's wheel": 0.842699966430664, "Acc.bicycle's saddle": 0.9675, "Acc.bicycle's handlebar": 0.9825, "Acc.bicycle's chainwheel": 0.9323999786376953, "Acc.bicycle's headlight": nan, "Acc.bird's wing": 0.8105999755859375, "Acc.bird's tail": 0.898499984741211, "Acc.bird's head": 0.47650001525878904, "Acc.bird's eye": 0.9538999938964844, "Acc.bird's beak": 0.9723000335693359, "Acc.bird's torso": 0.5275999832153321, "Acc.bird's neck": 0.92, "Acc.bird's leg": 0.8225, "Acc.bird's foot": 0.9137999725341797, "Acc.bottle's body": 0.9069000244140625, "Acc.bottle's cap": 0.9722000122070312, "Acc.bus's wheel": 0.8741999816894531, "Acc.bus's headlight": 0.9458000183105468, "Acc.bus's front": 0.4231000137329102, "Acc.bus's side": 0.5120999908447266, "Acc.bus's back": 0.5716999816894531, "Acc.bus's roof": 0.9879000091552734, "Acc.bus's mirror": 0.9116999816894531, "Acc.bus's license plate": 1.0, "Acc.bus's door": 0.7041000366210938, "Acc.bus's window": 0.8518000030517578, "Acc.car's wheel": 0.9525, "Acc.car's headlight": 0.9875, "Acc.car's front": 0.5002000045776367, "Acc.car's side": 0.36950000762939456, "Acc.car's back": 0.696500015258789, "Acc.car's roof": 0.867699966430664, "Acc.car's mirror": 0.9854000091552735, "Acc.car's license plate": 0.7338999938964844, "Acc.car's door": 0.8266000366210937, "Acc.car's window": 0.8520999908447265, "Acc.cat's tail": 0.9137000274658204, "Acc.cat's head": 0.5408000183105469, "Acc.cat's eye": 0.9605000305175782, "Acc.cat's torso": 0.7080999755859375, "Acc.cat's neck": 0.7636000061035156, "Acc.cat's leg": 0.5808000183105468, "Acc.cat's nose": 0.9904000091552735, "Acc.cat's paw": 0.9156999969482422, "Acc.cat's ear": 0.9359999847412109, "Acc.cow's tail": 0.9841999816894531, "Acc.cow's head": 0.5756999969482421, "Acc.cow's eye": 0.9733000183105469, "Acc.cow's torso": 0.6933999633789063, "Acc.cow's neck": 0.7051999664306641, "Acc.cow's leg": 0.7887000274658204, "Acc.cow's ear": 0.9069000244140625, "Acc.cow's muzzle": 0.8191999816894531, "Acc.cow's horn": 0.9830999755859375, "Acc.dog's tail": 0.987699966430664, "Acc.dog's head": 0.6047999954223633, "Acc.dog's eye": 0.9854000091552735, "Acc.dog's torso": 0.6715000152587891, "Acc.dog's neck": 0.8729000091552734, "Acc.dog's leg": 0.658499984741211, "Acc.dog's nose": 0.984800033569336, "Acc.dog's paw": 0.9009999847412109, "Acc.dog's ear": 0.8031999969482422, "Acc.dog's muzzle": 0.74, "Acc.horse's tail": 0.9191000366210937, "Acc.horse's head": 0.6855999755859375, "Acc.horse's eye": 0.9266999816894531, "Acc.horse's torso": 0.7368000030517579, "Acc.horse's neck": 0.8829000091552734, "Acc.horse's leg": 0.7470999908447266, "Acc.horse's ear": 0.9456999969482421, "Acc.horse's muzzle": 0.9191999816894532, "Acc.horse's hoof": 0.9970999908447266, "Acc.motorbike's wheel": 0.96, "Acc.motorbike's saddle": nan, "Acc.motorbike's handlebar": 0.7919999694824219, "Acc.motorbike's headlight": 0.6761000061035156, "Acc.person's head": 0.1834000015258789, "Acc.person's eye": 0.4336000061035156, "Acc.person's torso": 0.7579000091552734, "Acc.person's neck": 0.9176999664306641, "Acc.person's leg": 0.7563999938964844, "Acc.person's foot": 0.9227999877929688, "Acc.person's nose": 0.7048999786376953, "Acc.person's ear": 0.8973999786376953, "Acc.person's eyebrow": 0.9245999908447265, "Acc.person's mouth": 0.9833999633789062, "Acc.person's hair": 0.8680000305175781, "Acc.person's lower arm": 0.7063999938964843, "Acc.person's upper arm": 0.773499984741211, "Acc.person's hand": 0.7944999694824219, "Acc.pottedplant's pot": 0.8354000091552735, "Acc.pottedplant's plant": 0.936500015258789, "Acc.sheep's tail": 1.0, "Acc.sheep's head": 0.5295999908447265, "Acc.sheep's eye": 0.9002999877929687, "Acc.sheep's torso": 0.700999984741211, "Acc.sheep's neck": 0.842699966430664, "Acc.sheep's leg": 0.7891999816894532, "Acc.sheep's ear": 0.8555000305175782, "Acc.sheep's muzzle": 0.9283999633789063, "Acc.sheep's horn": 0.8469999694824218, "Acc.train's headlight": 0.8919999694824219, "Acc.train's head": 0.17319999694824217, "Acc.train's front": 0.7223999786376953, "Acc.train's side": 0.48939998626708986, "Acc.train's back": 0.8273999786376953, "Acc.train's roof": 0.6611000061035156, "Acc.train's coach": 0.5990000152587891, "Acc.tvmonitor's screen": 0.9030000305175782}], 'val/avg_miou': 44.29}
+[2026-09-12 02:49:42 default](main.py 226): INFO  >> 44.29, 44.29
+[2026-09-12 02:49:42 default](main.py 227): INFO Experiment dir: output/textstruct_spearman_20260912_024827/eval/gtproto_oracle_direct116
+[2026-09-12 02:49:42 default](main.py 131): INFO Saved results at segmentation_results/vitb_mlp_infonce_spearman_20260912_024827_gtproto_oracle.json
+[2026-09-12 02:49:42 default](main.py 573): INFO Experiment dir: output/textstruct_spearman_20260912_024827/eval/gtproto_oracle_direct116
+[ORACLE DIRECT116 mIoU] 44.29
+[PASS] 05_eval_gtproto_oracle_116
+
+========================================================================
+[STEP] 10_train_object_rank
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.0001, "method_grad_norm": 1.5895378709098773, "method_loss": 0.18555058538913727, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 1.0}
+[TextStructZoo] method=object_rank lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.0001
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 0, "train_object": 2.137982979194809e-05, "train_structure": 0.0034093486511868588, "train_total": 2.172076464447955e-05, "val_object": 0.0001060140878719106, "val_structure": 0.0003355466469656676, "val_total": 0.00010604764253660717}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 1, "train_object": 2.1253583409401364e-05, "train_structure": 0.0002052791709293239, "train_total": 2.1274111327076643e-05, "val_object": 0.00010606717638218083, "val_structure": 0.00013818191655445844, "val_total": 0.00010608099457383628}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 2, "train_object": 2.1181141191823623e-05, "train_structure": 0.00011274407136077591, "train_total": 2.11924156082687e-05, "val_object": 0.00010604687258360126, "val_structure": 9.478056017542258e-05, "val_total": 0.00010605635063961881}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 3, "train_object": 2.114326967476982e-05, "train_structure": 8.873247649601291e-05, "train_total": 2.1152142929081328e-05, "val_object": 0.00010604393051063667, "val_structure": 8.335480379173532e-05, "val_total": 0.00010605226599101584}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 4, "train_object": 2.1158986078796392e-05, "train_structure": 7.799605842318117e-05, "train_total": 2.1166785671239795e-05, "val_object": 0.00010603648951648137, "val_structure": 7.371261017397046e-05, "val_total": 0.00010604386077749877}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 5, "train_object": 2.1087219775983548e-05, "train_structure": 7.09637047445424e-05, "train_total": 2.1094316154768243e-05, "val_object": 0.00010611350394769529, "val_structure": 6.715151539538056e-05, "val_total": 0.00010612021909923483}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 6, "train_object": 2.1070305808299067e-05, "train_structure": 6.569290141812402e-05, "train_total": 2.107687510511223e-05, "val_object": 0.00010608250357274136, "val_structure": 6.47398192086257e-05, "val_total": 0.00010608897755466222}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 7, "train_object": 2.1052354524807922e-05, "train_structure": 6.204293012968948e-05, "train_total": 2.1058558814921864e-05, "val_object": 0.00010606762072087014, "val_structure": 6.065918933018111e-05, "val_total": 0.00010607368663980316}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 8, "train_object": 2.1052819551472538e-05, "train_structure": 5.726123705846973e-05, "train_total": 2.10585456654722e-05, "val_object": 0.00010612560628593348, "val_structure": 5.8958165027434006e-05, "val_total": 0.00010613150210243622}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0001, "epoch": 9, "train_object": 2.1087836576684435e-05, "train_structure": 5.567057449205677e-05, "train_total": 2.109340361455207e-05, "val_object": 0.0001060703828976201, "val_structure": 5.8022829762194306e-05, "val_total": 0.00010607618518059631}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_object_rank.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/object_rank.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 10_train_object_rank
+
+========================================================================
+[STEP] 10_spearman_object_rank
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.47892120
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 10_spearman_object_rank
+
+========================================================================
+[STEP] 11_train_global_row_rank
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 9.910928203579129e-05, "method_grad_norm": 1.6038234141741117, "method_loss": 0.2305566370487213, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 0.9910928203579128}
+[TextStructZoo] method=global_row_rank lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=9.9109282e-05
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 0, "train_object": 2.1638996693355065e-05, "train_structure": 0.012859658695433901, "train_total": 2.2913508243255586e-05, "val_object": 0.00010622856489870247, "val_structure": 0.004337282385677099, "val_total": 0.0001066584298419334}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 1, "train_object": 2.1496441025566692e-05, "train_structure": 0.003312937453045534, "train_total": 2.1824783879826433e-05, "val_object": 0.00010624418896119518, "val_structure": 0.002613269491121173, "val_total": 0.00010650318822422624}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 2, "train_object": 2.1411591925896728e-05, "train_structure": 0.002245110814411847, "train_total": 2.1634103245363515e-05, "val_object": 0.00010620323473171947, "val_structure": 0.001973038073629141, "val_total": 0.00010639878111862613}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 3, "train_object": 2.135474394860126e-05, "train_structure": 0.0017800306869965457, "train_total": 2.1531161515595966e-05, "val_object": 0.00010620482301263367, "val_structure": 0.0016241628909483552, "val_total": 0.00010636579263066473}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 4, "train_object": 2.1356713756453318e-05, "train_structure": 0.0014973445572431011, "train_total": 2.1505114508355158e-05, "val_object": 0.0001061904025745106, "val_structure": 0.0013748962664976716, "val_total": 0.00010632666755635688}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 5, "train_object": 2.1272770936213376e-05, "train_structure": 0.00131514000062277, "train_total": 2.1403113517074306e-05, "val_object": 0.00010624850321362075, "val_structure": 0.0012549336533993483, "val_total": 0.00010637287878701171}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 6, "train_object": 2.125163745077131e-05, "train_structure": 0.0011852369691234897, "train_total": 2.136910543851697e-05, "val_object": 0.00010620976416413959, "val_structure": 0.0011399115901440382, "val_total": 0.00010632273998342304}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 7, "train_object": 2.1224958991982947e-05, "train_structure": 0.0010836868551507943, "train_total": 2.1332362405963076e-05, "val_object": 0.00010618481032585318, "val_structure": 0.0010372441029176116, "val_total": 0.0001062876108441892}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 8, "train_object": 2.1218126026584946e-05, "train_structure": 0.0009948080674866307, "train_total": 2.1316720741546693e-05, "val_object": 0.00010623710821880994, "val_structure": 0.0009639884810894728, "val_total": 0.00010633264842506149}
+[TextStructZoo epoch] {"effective_structure_weight": 9.910928203579129e-05, "epoch": 9, "train_object": 2.125298578369307e-05, "train_structure": 0.0009367905440380537, "train_total": 2.1345830418514175e-05, "val_object": 0.00010617658912763941, "val_structure": 0.0009120476897805929, "val_total": 0.00010626698151935596}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_global_row_rank.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/global_row_rank.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 11_train_global_row_rank
+
+========================================================================
+[STEP] 11_spearman_global_row_rank
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.48401696
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 11_spearman_global_row_rank
+
+========================================================================
+[STEP] 12_train_object_neighbor_kl
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 8.177975233000562e-05, "method_grad_norm": 1.9436814439051115, "method_loss": 0.21125203371047974, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 0.8177975233000562}
+[TextStructZoo] method=object_neighbor_kl lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=8.1779752e-05
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 0, "train_object": 2.1450958882986586e-05, "train_structure": 0.0033231471010799086, "train_total": 2.172272503501425e-05, "val_object": 0.0001060301457909365, "val_structure": 0.00041864189552143216, "val_total": 0.00010606438222146721}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 1, "train_object": 2.128011041624274e-05, "train_structure": 0.00029231214966841257, "train_total": 2.1304015637940512e-05, "val_object": 0.00010608474747072012, "val_structure": 0.00020386191317811608, "val_total": 0.00010610141924748935}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 2, "train_object": 2.1205575681821506e-05, "train_structure": 0.00016163906301293327, "train_total": 2.121879448214422e-05, "val_object": 0.00010606566390627201, "val_structure": 0.00012643721129279584, "val_total": 0.00010607600391009683}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 3, "train_object": 2.1166234460115257e-05, "train_structure": 0.00011061029228509092, "train_total": 2.117528014208716e-05, "val_object": 0.00010606278833666243, "val_structure": 9.307330037700012e-05, "val_total": 0.0001060703998481158}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 4, "train_object": 2.1184681863129282e-05, "train_structure": 8.36027837368668e-05, "train_total": 2.1191518865885564e-05, "val_object": 0.00010605811187567518, "val_structure": 7.570269372081384e-05, "val_total": 0.00010606430282321838}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 5, "train_object": 2.1109761027971168e-05, "train_structure": 6.936957419163924e-05, "train_total": 2.1115434055979246e-05, "val_object": 0.00010613169821006136, "val_structure": 6.430374196497723e-05, "val_total": 0.00010613695695415314}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 6, "train_object": 2.1092152734718354e-05, "train_structure": 5.8209686849452786e-05, "train_total": 2.1096913103904956e-05, "val_object": 0.00010609895133426897, "val_structure": 5.654339838656597e-05, "val_total": 0.00010610357543938491}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 7, "train_object": 2.1070619013991185e-05, "train_structure": 4.977117276142382e-05, "train_total": 2.1074689279621016e-05, "val_object": 0.00010608629915595608, "val_structure": 4.810433529200964e-05, "val_total": 0.00010609023311658227}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 8, "train_object": 2.1072194580622886e-05, "train_structure": 4.305454216854965e-05, "train_total": 2.1075715565134392e-05, "val_object": 0.00010614788721575292, "val_structure": 4.3449934310046956e-05, "val_total": 0.00010615144054061955}
+[TextStructZoo epoch] {"effective_structure_weight": 8.177975233000562e-05, "epoch": 9, "train_object": 2.1108086305899942e-05, "train_structure": 4.015098915265248e-05, "train_total": 2.111136983893887e-05, "val_object": 0.00010608931761269541, "val_structure": 3.764974826481193e-05, "val_total": 0.0001060923965997838}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_object_neighbor_kl.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/object_neighbor_kl.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 12_train_object_neighbor_kl
+
+========================================================================
+[STEP] 12_spearman_object_neighbor_kl
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.48190675
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 12_spearman_object_neighbor_kl
+
+========================================================================
+[STEP] 13_train_global_neighbor_kl
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 1.1030459584490967e-05, "method_grad_norm": 14.41044100415179, "method_loss": 2.2545015811920166, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 0.11030459584490966}
+[TextStructZoo] method=global_neighbor_kl lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=1.103046e-05
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 0, "train_object": 2.1777841828492628e-05, "train_structure": 0.06665552528667158, "train_total": 2.2513082928567868e-05, "val_object": 0.00010632413117068931, "val_structure": 0.017227500677108765, "val_total": 0.00010651415842064995}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 1, "train_object": 2.1493157548176696e-05, "train_structure": 0.013871505481222061, "train_total": 2.1646166631036957e-05, "val_object": 0.0001063076396339874, "val_structure": 0.011480250395834446, "val_total": 0.0001064342720719985}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 2, "train_object": 2.1391063919126945e-05, "train_structure": 0.010229339603247173, "train_total": 2.1503898240472156e-05, "val_object": 0.00010624266061506316, "val_structure": 0.009298620745539665, "val_total": 0.00010634522867538834}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 3, "train_object": 2.1331516077298463e-05, "train_structure": 0.00856288561133532, "train_total": 2.142596863298538e-05, "val_object": 0.00010622884848190652, "val_structure": 0.00795945804566145, "val_total": 0.00010631664496219364}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 4, "train_object": 2.1330868191327797e-05, "train_structure": 0.0074816468411801, "train_total": 2.1413394195887165e-05, "val_object": 0.00010621777352817577, "val_structure": 0.006944814696907997, "val_total": 0.0001062943780260118}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 5, "train_object": 2.1248826514057316e-05, "train_structure": 0.006751711079413336, "train_total": 2.1323300990238734e-05, "val_object": 0.00010626653895289767, "val_structure": 0.0065167564898729324, "val_total": 0.00010633842177198118}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 6, "train_object": 2.1227932723189562e-05, "train_structure": 0.006211947238162547, "train_total": 2.1296453368527447e-05, "val_object": 0.00010622755341197869, "val_structure": 0.006156560033559799, "val_total": 0.00010629546309860837}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 7, "train_object": 2.1201172162830496e-05, "train_structure": 0.005791376888946537, "train_total": 2.1265053717121074e-05, "val_object": 0.00010619408862792147, "val_structure": 0.00556182861328125, "val_total": 0.00010625543815365613}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 8, "train_object": 2.1195617778350055e-05, "train_structure": 0.005389945543709594, "train_total": 2.1255071366342102e-05, "val_object": 0.00010624953168217237, "val_structure": 0.005261156242340803, "val_total": 0.00010630756465347121}
+[TextStructZoo epoch] {"effective_structure_weight": 1.1030459584490967e-05, "epoch": 9, "train_object": 2.1230459139550664e-05, "train_structure": 0.005145470226098345, "train_total": 2.1287216027972567e-05, "val_object": 0.00010619100107714525, "val_structure": 0.005055813584476709, "val_total": 0.00010624676902455554}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_global_neighbor_kl.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/global_neighbor_kl.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 13_train_global_neighbor_kl
+
+========================================================================
+[STEP] 13_spearman_global_neighbor_kl
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.49043427
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 13_spearman_global_neighbor_kl
+
+========================================================================
+[STEP] 14_train_object_confidence_rank
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.0037257163940108834, "method_grad_norm": 0.042663952453951444, "method_loss": 0.003347123274579644, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 37.25716394010883}
+[TextStructZoo] method=object_confidence_rank lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.0037257164
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 0, "train_object": 2.129105029883904e-05, "train_structure": 1.2608639778788651e-05, "train_total": 2.1338026512154154e-05, "val_object": 0.00010599353403578256, "val_structure": 1.0933744931662659e-07, "val_total": 0.00010599394139610995}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 1, "train_object": 2.117866835470602e-05, "train_structure": 1.4987875378626223e-09, "train_total": 2.117867393955436e-05, "val_object": 0.00010604318058172756, "val_structure": 0.0, "val_total": 0.00010604318058172756}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 2, "train_object": 2.112501827629568e-05, "train_structure": 1.3042710068716952e-09, "train_total": 2.1125023134335212e-05, "val_object": 0.00010603425019353656, "val_structure": 2.4433882117591565e-07, "val_total": 0.00010603516053068831}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 3, "train_object": 2.109236024875068e-05, "train_structure": 1.5469137969303393e-09, "train_total": 2.109236601235014e-05, "val_object": 0.0001060297055082261, "val_structure": 0.0, "val_total": 0.0001060297055082261}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 4, "train_object": 2.1115667127487225e-05, "train_structure": 8.973515592005588e-10, "train_total": 2.111567047541704e-05, "val_object": 0.00010602646099611931, "val_structure": 0.0, "val_total": 0.00010602646099611931}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 5, "train_object": 2.103995230851346e-05, "train_structure": 7.556415659207678e-10, "train_total": 2.1039955121595187e-05, "val_object": 0.0001061065513246344, "val_structure": 0.0, "val_total": 0.0001061065513246344}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 6, "train_object": 2.1030517744201133e-05, "train_structure": 8.618097171809465e-10, "train_total": 2.1030520959191832e-05, "val_object": 0.00010607066084471304, "val_structure": 4.3252164516616176e-08, "val_total": 0.00010607082199001145}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 7, "train_object": 2.1018794959234512e-05, "train_structure": 8.695806095713205e-10, "train_total": 2.1018798197552794e-05, "val_object": 0.00010605445056695096, "val_structure": 2.3867722021009286e-08, "val_total": 0.00010605453949131418}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 8, "train_object": 2.10183370868306e-05, "train_structure": 7.886389954803312e-10, "train_total": 2.1018340028073512e-05, "val_object": 0.00010612092567709918, "val_structure": 0.0, "val_total": 0.00010612092567709918}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0037257163940108834, "epoch": 9, "train_object": 2.1057732150004874e-05, "train_structure": 7.901487708686865e-10, "train_total": 2.105773509433939e-05, "val_object": 0.0001060576112309957, "val_structure": 1.387805355079763e-07, "val_total": 0.00010605812828791201}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_object_confidence_rank.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/object_confidence_rank.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 14_train_object_confidence_rank
+
+========================================================================
+[STEP] 14_spearman_object_confidence_rank
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.48934340
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 14_spearman_object_confidence_rank
+
+========================================================================
+[STEP] 15_train_global_confidence_rank
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.004507503779649538, "method_grad_norm": 0.03526426041141257, "method_loss": 0.001067142584361136, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 45.07503779649538}
+[TextStructZoo] method=global_confidence_rank lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.0045075038
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 0, "train_object": 2.1288680513148467e-05, "train_structure": 3.70390843445231e-06, "train_total": 2.1305375898845935e-05, "val_object": 0.00010600596155053048, "val_structure": 6.455681500483479e-08, "val_total": 0.00010600625254061811}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 1, "train_object": 2.1176171879438886e-05, "train_structure": 6.070583642070493e-09, "train_total": 2.1176199246348063e-05, "val_object": 0.00010605295346058392, "val_structure": 1.9269746687200495e-08, "val_total": 0.00010605304031903995}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 2, "train_object": 2.1122083062302108e-05, "train_structure": 3.80592543043972e-09, "train_total": 2.1122100211448652e-05, "val_object": 0.00010604622357645022, "val_structure": 2.0384222310099176e-08, "val_total": 0.00010604631545840933}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 3, "train_object": 2.1089769535105144e-05, "train_structure": 2.926708655923487e-09, "train_total": 2.108978272277832e-05, "val_object": 0.00010603617584186422, "val_structure": 5.836321648189369e-09, "val_total": 0.00010603620214910612}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 4, "train_object": 2.1114575151217622e-05, "train_structure": 3.0182174077084766e-09, "train_total": 2.1114588755414638e-05, "val_object": 0.00010603483858148772, "val_structure": 4.989927138154826e-09, "val_total": 0.00010603486107360315}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 5, "train_object": 2.103922968124627e-05, "train_structure": 2.406465482794717e-09, "train_total": 2.1039240531664213e-05, "val_object": 0.00010611340102780495, "val_structure": 0.0, "val_total": 0.00010611340102780495}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 6, "train_object": 2.1030409715848217e-05, "train_structure": 2.4621264291313744e-09, "train_total": 2.103042080684943e-05, "val_object": 0.00010607278079877494, "val_structure": 5.188510177056571e-10, "val_total": 0.00010607278313749787}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 7, "train_object": 2.1015941791724815e-05, "train_structure": 2.484439229157856e-09, "train_total": 2.1015952986435406e-05, "val_object": 0.00010606013427494679, "val_structure": 0.0, "val_total": 0.00010606013427494679}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 8, "train_object": 2.101636725677518e-05, "train_structure": 2.331115356437775e-09, "train_total": 2.1016377757841477e-05, "val_object": 0.000106124470225996, "val_structure": 0.0, "val_total": 0.000106124470225996}
+[TextStructZoo epoch] {"effective_structure_weight": 0.004507503779649538, "epoch": 9, "train_object": 2.1054439060807306e-05, "train_structure": 2.351053915724513e-09, "train_total": 2.105444964815756e-05, "val_object": 0.00010606888586934098, "val_structure": 1.1250135267815153e-09, "val_total": 0.0001060688909403437}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_global_confidence_rank.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/global_confidence_rank.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 15_train_global_confidence_rank
+
+========================================================================
+[STEP] 15_spearman_global_confidence_rank
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.50974796
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 15_spearman_global_confidence_rank
+
+========================================================================
+[STEP] 16_train_rkd_distance
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.006091641605979539, "method_grad_norm": 0.026093752287554003, "method_loss": 0.004380422178655863, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 60.91641605979539}
+[TextStructZoo] method=rkd_distance lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.0060916416
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 0, "train_object": 2.1683557401445413e-05, "train_structure": 0.0001861128051596558, "train_total": 2.2817289922154818e-05, "val_object": 0.0001062579559090014, "val_structure": 4.921423169435002e-05, "val_total": 0.00010655775137039703}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 1, "train_object": 2.1482352209245163e-05, "train_structure": 3.865823291067608e-05, "train_total": 2.1717844310673705e-05, "val_object": 0.00010622013369908073, "val_structure": 3.1389023206429556e-05, "val_total": 0.00010641134437881608}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 2, "train_object": 2.138391279415746e-05, "train_structure": 2.7561642771872202e-05, "train_total": 2.1551808450040217e-05, "val_object": 0.00010616411842107996, "val_structure": 2.467814920237288e-05, "val_total": 0.0001063144488615197}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 3, "train_object": 2.132986095067844e-05, "train_structure": 2.2470881838995408e-05, "train_total": 2.1466745488705717e-05, "val_object": 0.0001061526751311818, "val_structure": 2.061616032733582e-05, "val_total": 0.00010627826139118734}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 4, "train_object": 2.133042942843061e-05, "train_structure": 1.921613858841032e-05, "train_total": 2.1447487259641794e-05, "val_object": 0.00010614043226223197, "val_structure": 1.7956843294086866e-05, "val_total": 0.00010624981891595429}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 5, "train_object": 2.124633446428572e-05, "train_structure": 1.712727053760156e-05, "train_total": 2.1350667667827547e-05, "val_object": 0.00010619889507315656, "val_structure": 1.6344518371624872e-05, "val_total": 0.00010629846002129885}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 6, "train_object": 2.122506666564417e-05, "train_structure": 1.5530688410251586e-05, "train_total": 2.1319674058869292e-05, "val_object": 0.0001061553168779717, "val_structure": 1.488677389716031e-05, "val_total": 0.00010624600176922245}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 7, "train_object": 2.120195166724317e-05, "train_structure": 1.4286368005495474e-05, "train_total": 2.1288979112962755e-05, "val_object": 0.0001061332399367897, "val_structure": 1.3773404134553857e-05, "val_total": 0.00010621714257847171}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 8, "train_object": 2.119144823277324e-05, "train_structure": 1.3253436756434392e-05, "train_total": 2.127218341921829e-05, "val_object": 0.00010618520620868587, "val_structure": 1.2932880963489879e-05, "val_total": 0.00010626398868444824}
+[TextStructZoo epoch] {"effective_structure_weight": 0.006091641605979539, "epoch": 9, "train_object": 2.1227246010283e-05, "train_structure": 1.2525469597683165e-05, "train_total": 2.13035466913987e-05, "val_object": 0.00010612468675922954, "val_structure": 1.2180673365946859e-05, "val_total": 0.00010619888705589438}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_rkd_distance.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/rkd_distance.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 16_train_rkd_distance
+
+========================================================================
+[STEP] 16_spearman_rkd_distance
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.48517240
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 16_spearman_rkd_distance
+
+========================================================================
+[STEP] 17_train_rkd_angle
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.007921305315994276, "method_grad_norm": 0.02006661538093182, "method_loss": 0.003998033702373505, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 79.21305315994276}
+[TextStructZoo] method=rkd_angle lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.0079213053
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 0, "train_object": 2.175294227332557e-05, "train_structure": 0.00017155646715860987, "train_total": 2.3111893467594356e-05, "val_object": 0.0001062776888756336, "val_structure": 4.140472810831852e-05, "val_total": 0.00010660566836850533}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 1, "train_object": 2.1527053727969643e-05, "train_structure": 3.210777732353627e-05, "train_total": 2.178138923697304e-05, "val_object": 0.00010623524062196734, "val_structure": 2.5726632884470746e-05, "val_total": 0.00010643902913579773}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 2, "train_object": 2.1422716230747175e-05, "train_structure": 2.236679891344337e-05, "train_total": 2.1599890458267087e-05, "val_object": 0.00010618071863321191, "val_structure": 1.980263550649397e-05, "val_total": 0.00010633758135512021}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 3, "train_object": 2.1360521963382627e-05, "train_structure": 1.790781233746918e-05, "train_total": 2.1502375217114403e-05, "val_object": 0.0001061694408897231, "val_structure": 1.6294759916490875e-05, "val_total": 0.00010629851665807245}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 4, "train_object": 2.1359311842177352e-05, "train_structure": 1.5097946321616971e-05, "train_total": 2.147890729795088e-05, "val_object": 0.00010615558635941448, "val_structure": 1.4028860277903732e-05, "val_total": 0.00010626671324491117}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 5, "train_object": 2.126834568153564e-05, "train_structure": 1.3312009490938226e-05, "train_total": 2.137379416532194e-05, "val_object": 0.00010621082175489529, "val_structure": 1.265184982912615e-05, "val_total": 0.0001063110409202039}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 6, "train_object": 2.1246625426424323e-05, "train_structure": 1.1964170709792344e-05, "train_total": 2.134139727096261e-05, "val_object": 0.00010616961538868385, "val_structure": 1.140338645200245e-05, "val_total": 0.00010625994509440644}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 7, "train_object": 2.1224515505952736e-05, "train_structure": 1.0921938399617271e-05, "train_total": 2.1311031522509327e-05, "val_object": 0.0001061481153978681, "val_structure": 1.0485791790415533e-05, "val_total": 0.00010623117655611992}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 8, "train_object": 2.121526828518255e-05, "train_structure": 1.0067608137209405e-05, "train_total": 2.129501688656975e-05, "val_object": 0.00010619622490695393, "val_structure": 9.797604434425011e-06, "val_total": 0.00010627383472304435}
+[TextStructZoo epoch] {"effective_structure_weight": 0.007921305315994276, "epoch": 9, "train_object": 2.1247394666981308e-05, "train_structure": 9.452240367147722e-06, "train_total": 2.1322268764623214e-05, "val_object": 0.00010613851519898309, "val_structure": 9.146794582193252e-06, "val_total": 0.00010621096975153133}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_rkd_angle.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/rkd_angle.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 17_train_rkd_angle
+
+========================================================================
+[STEP] 17_spearman_rkd_angle
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.48046605
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 17_spearman_rkd_angle
+
+========================================================================
+[STEP] 18_train_gram_mse
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 7.395405132667554e-05, "method_grad_norm": 2.149358746944705, "method_loss": 0.22885747253894806, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 0.7395405132667553}
+[TextStructZoo] method=gram_mse lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=7.3954051e-05
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 0, "train_object": 2.1623983818050107e-05, "train_structure": 0.004945634198516068, "train_total": 2.1989733485912547e-05, "val_object": 0.00010619542799667206, "val_structure": 0.0012739580124616623, "val_total": 0.00010628964235291368}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 1, "train_object": 2.1376255066867387e-05, "train_structure": 0.001071612113081316, "train_total": 2.145550511676086e-05, "val_object": 0.00010621283551856065, "val_structure": 0.0009171704296022654, "val_total": 0.00010628066398758676}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 2, "train_object": 2.129037872609629e-05, "train_structure": 0.0008298563607083403, "train_total": 2.1351749963431048e-05, "val_object": 0.00010616990013402002, "val_structure": 0.0007685491000302136, "val_total": 0.00010622673745361072}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 3, "train_object": 2.1245607932318324e-05, "train_structure": 0.0007184351457443206, "train_total": 2.1298739104934626e-05, "val_object": 0.0001061729624623952, "val_structure": 0.0006719675147905946, "val_total": 0.00010622265718247387}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 4, "train_object": 2.1254259498420497e-05, "train_structure": 0.0006382852309127022, "train_total": 2.1301463269221167e-05, "val_object": 0.00010616793522124432, "val_structure": 0.0005951503408141434, "val_total": 0.00010621194900009599}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 5, "train_object": 2.1177126545336104e-05, "train_structure": 0.0005899866659512826, "train_total": 2.12207584524793e-05, "val_object": 0.00010622993169468974, "val_structure": 0.0005781231448054314, "val_total": 0.00010627268624341382}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 6, "train_object": 2.1157935865927656e-05, "train_structure": 0.0005517788833055855, "train_total": 2.119874214307085e-05, "val_object": 0.00010618802456281059, "val_structure": 0.0005600558943115175, "val_total": 0.00010622944296516431}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 7, "train_object": 2.113540858997311e-05, "train_structure": 0.0005215820113687093, "train_total": 2.1173981673139908e-05, "val_object": 0.00010616389932472498, "val_structure": 0.0005070756305940449, "val_total": 0.00010620139962193644}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 8, "train_object": 2.1132151209122687e-05, "train_structure": 0.0004935303558924291, "train_total": 2.1168649769163474e-05, "val_object": 0.00010621703720493995, "val_structure": 0.00047936561168171465, "val_total": 0.00010625248823399051}
+[TextStructZoo epoch] {"effective_structure_weight": 7.395405132667554e-05, "epoch": 9, "train_object": 2.1169977056389076e-05, "train_structure": 0.000473914639561665, "train_total": 2.1205024961419383e-05, "val_object": 0.00010615897668924505, "val_structure": 0.0004728316271211952, "val_total": 0.00010619394450366604}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_gram_mse.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/gram_mse.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 18_train_gram_mse
+
+========================================================================
+[STEP] 18_spearman_gram_mse
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.51836521
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 18_spearman_gram_mse
+
+========================================================================
+[STEP] 19_train_gram_corr
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.00010294833996215972, "method_grad_norm": 1.5440150579350158, "method_loss": 0.22192442417144775, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 1.029483399621597}
+[TextStructZoo] method=gram_corr lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.00010294834
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 0, "train_object": 2.1635308530170513e-05, "train_structure": 0.010253173403893177, "train_total": 2.2690855708997253e-05, "val_object": 0.00010623171316054674, "val_structure": 0.0029454827308654785, "val_total": 0.00010653494571807654}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 1, "train_object": 2.1454993648812246e-05, "train_structure": 0.0022936621761439906, "train_total": 2.1691122357184297e-05, "val_object": 0.00010621153525348883, "val_structure": 0.0018469691276550293, "val_total": 0.00010640167765914227}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 2, "train_object": 2.1362263817461264e-05, "train_structure": 0.0016158991971033613, "train_total": 2.1528617949807265e-05, "val_object": 0.000106153331735829, "val_structure": 0.0014429688453674316, "val_total": 0.0001063018829830767}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 3, "train_object": 2.131037697693515e-05, "train_structure": 0.0013130257649828388, "train_total": 2.144555078887396e-05, "val_object": 0.0001061428238979789, "val_structure": 0.0012034177780151367, "val_total": 0.0001062667137605065}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 4, "train_object": 2.131430293813337e-05, "train_structure": 0.001120164069463355, "train_total": 2.1429621977362573e-05, "val_object": 0.00010613236895781052, "val_structure": 0.0010455846786499023, "val_total": 0.0001062400101647674}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 5, "train_object": 2.1230809287703412e-05, "train_structure": 0.0009975514762628505, "train_total": 2.1333505536250662e-05, "val_object": 0.00010619349767684889, "val_structure": 0.0009518861770629883, "val_total": 0.00010629149277861045}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 6, "train_object": 2.1209249317542634e-05, "train_structure": 0.0009037798503125996, "train_total": 2.130229193440818e-05, "val_object": 0.00010615105043832568, "val_structure": 0.0008658170700073242, "val_total": 0.00010624018486839384}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 7, "train_object": 2.1187177000292504e-05, "train_structure": 0.0008304290040609127, "train_total": 2.1272668284727933e-05, "val_object": 0.00010613158665915817, "val_structure": 0.0007995963096618652, "val_total": 0.00010621390377187774}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 8, "train_object": 2.117820597136578e-05, "train_structure": 0.0007693746733871762, "train_total": 2.125741180649473e-05, "val_object": 0.00010618314068191044, "val_structure": 0.0007512569427490234, "val_total": 0.0001062604813370515}
+[TextStructZoo epoch] {"effective_structure_weight": 0.00010294833996215972, "epoch": 9, "train_object": 2.121477350263936e-05, "train_structure": 0.0007265792752078497, "train_total": 2.12895736313245e-05, "val_object": 0.00010612475279865039, "val_structure": 0.0007069110870361328, "val_total": 0.0001061975281215616}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_gram_corr.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/gram_corr.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 19_train_gram_corr
+
+========================================================================
+[STEP] 19_spearman_gram_corr
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.48232717
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 19_spearman_gram_corr
+
+========================================================================
+[STEP] 20_train_topk_margin
+========================================================================
+Loading dataset...
+Dataset loaded!
+Loading dataset...
+Dataset loaded!
+Setting seed 123...
+[TextStructZoo calibration] {"base_structure_weight": 0.0001, "effective_structure_weight": 0.0005399235313932815, "method_grad_norm": 0.2944005546133633, "method_loss": 0.07096506655216217, "reference_grad_norm": 1.5895378709098773, "reference_loss": 0.18555058538913727, "scale_factor": 5.399235313932815}
+[TextStructZoo] method=topk_margin lr=1e-05 epochs=10 base_lambda=0.0001 effective_lambda=0.00053992353
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 0, "train_object": 2.1390707098442146e-05, "train_structure": 0.0007815980077529515, "train_total": 2.1812710267958703e-05, "val_object": 0.00010607569900439373, "val_structure": 1.2347410347501864e-06, "val_total": 0.00010607636567013357}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 1, "train_object": 2.1224635442615453e-05, "train_structure": 4.793784539430657e-08, "train_total": 2.122466132218039e-05, "val_object": 0.00010608564171530871, "val_structure": 9.814212944547762e-07, "val_total": 0.0001060861716077598}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 2, "train_object": 2.1159896047638325e-05, "train_structure": 3.534305852174376e-08, "train_total": 2.1159915138033297e-05, "val_object": 0.00010606884283829872, "val_structure": 0.0, "val_total": 0.00010606884283829872}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 3, "train_object": 2.1122216319296066e-05, "train_structure": 2.8991558407656106e-08, "train_total": 2.112223197098038e-05, "val_object": 0.00010604804850972317, "val_structure": 0.0, "val_total": 0.00010604804850972317}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 4, "train_object": 2.113865438010614e-05, "train_structure": 2.545939216458692e-08, "train_total": 2.113866812736026e-05, "val_object": 0.00010604777801313732, "val_structure": 0.0, "val_total": 0.00010604777801313732}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 5, "train_object": 2.1064216391356944e-05, "train_structure": 2.2405014617897637e-08, "train_total": 2.1064228487973744e-05, "val_object": 0.00010612626730025195, "val_structure": 9.022909921441169e-07, "val_total": 0.00010612675446839078}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 6, "train_object": 2.1052704943897904e-05, "train_structure": 2.08861422200049e-08, "train_total": 2.105271621899029e-05, "val_object": 0.0001060845128440541, "val_structure": 0.0, "val_total": 0.0001060845128440541}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 7, "train_object": 2.103749732346151e-05, "train_structure": 1.9493187627480245e-08, "train_total": 2.103750785235228e-05, "val_object": 0.00010607068658616915, "val_structure": 1.5420132513099816e-06, "val_total": 0.00010607151915540925}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 8, "train_object": 2.1035190264237726e-05, "train_structure": 1.8914847389638963e-08, "train_total": 2.1035200478065587e-05, "val_object": 0.00010612387555885667, "val_structure": 1.0636345848524797e-07, "val_total": 0.00010612393298699079}
+[TextStructZoo epoch] {"effective_structure_weight": 0.0005399235313932815, "epoch": 9, "train_object": 2.1071851711238306e-05, "train_structure": 1.6752373589934476e-08, "train_total": 2.107186075981121e-05, "val_object": 0.00010607113918380529, "val_structure": 1.0944645509880502e-06, "val_total": 0.00010607173011097065}
+[saved] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/weights/vitb_mlp_infonce_spearman_20260912_024827_topk_margin.pth
+[metrics] /mnt/sda/master/code/lyx/Talk2DINO_official_bg/output/textstruct_spearman_20260912_024827/train_metrics/topk_margin.json
+TEXTSTRUCT_TRAIN_PASS
+[PASS] 20_train_topk_margin
+
+========================================================================
+[STEP] 20_spearman_topk_margin
+========================================================================
+Valid objects: 13
+RAW CLIP     vs GT visual macro Spearman = 0.48162577
+INITIAL      vs GT visual macro Spearman = 0.52252757
+CURRENT      vs GT visual macro Spearman = 0.54807809
+THREE_SPEARMAN_AUDIT_PASS
+[PASS] 20_spearman_topk_margin
+
+========================================================================
+[STEP] FINAL_summary
+========================================================================
+=== THREE-SPEARMAN SCREEN ===
+GT visual = crop-balanced TRAIN-GT DINO prototypes
+
+initial	raw=0.48162577	initial=0.52252757	current=0.52252757
+existing_partstruct	raw=0.48162577	initial=0.52252757	current=0.47892120
+gtproto_oracle	raw=0.48162577	initial=0.52252757	current=0.94788800
+object_rank	raw=0.48162577	initial=0.52252757	current=0.47892120
+global_row_rank	raw=0.48162577	initial=0.52252757	current=0.48401696
+object_neighbor_kl	raw=0.48162577	initial=0.52252757	current=0.48190675
+global_neighbor_kl	raw=0.48162577	initial=0.52252757	current=0.49043427
+object_confidence_rank	raw=0.48162577	initial=0.52252757	current=0.48934340
+global_confidence_rank	raw=0.48162577	initial=0.52252757	current=0.50974796
+rkd_distance	raw=0.48162577	initial=0.52252757	current=0.48517240
+rkd_angle	raw=0.48162577	initial=0.52252757	current=0.48046605
+gram_mse	raw=0.48162577	initial=0.52252757	current=0.51836521
+gram_corr	raw=0.48162577	initial=0.52252757	current=0.48232717
+topk_margin	raw=0.48162577	initial=0.52252757	current=0.54807809
+
+GTProto Oracle direct116 mIoU = 44.29
+[PASS] FINAL_summary
+
+========================================================================
+DONE 2026-09-12T06:16:00+08:00
+========================================================================
+Send me:
+  cat 'output/textstruct_spearman_20260912_024827/RESULTS_TO_SEND.txt'
+
+Status:
+  cat 'output/textstruct_spearman_20260912_024827/status.tsv'
+========================================================================

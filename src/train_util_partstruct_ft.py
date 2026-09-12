@@ -406,6 +406,7 @@ def do_train_partstruct(
     train_cfg,
     structure_bank,
     structure_weight,
+    structure_teacher_bank=None,
     rank_temperature=0.05,
     structure_min_parts=3,
     seed=123,
@@ -465,6 +466,7 @@ def do_train_partstruct(
 
     structure_criterion = PartStructureRankLoss.from_file(
         structure_bank,
+        teacher_path=structure_teacher_bank,
         rank_temperature=rank_temperature,
         min_parts=structure_min_parts,
     ).to(device)
@@ -493,6 +495,7 @@ def do_train_partstruct(
     print(
         "[PartStructure] "
         f"bank={structure_bank} "
+        f"teacher_bank={structure_teacher_bank or structure_bank} "
         f"weight={float(structure_weight):.8g} "
         f"rank_temperature={float(rank_temperature):.8g} "
         f"min_parts={int(structure_min_parts)}"

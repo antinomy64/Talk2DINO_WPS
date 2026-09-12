@@ -125,6 +125,7 @@ class PartStructureRankLoss(nn.Module):
         self,
         raw_part_features,
         object_groups,
+        teacher_part_features=None,
         rank_temperature=0.05,
         min_parts=3,
         eps=1e-6,
@@ -154,11 +155,52 @@ class PartStructureRankLoss(nn.Module):
             raise ValueError("Nonfinite raw CLIP bank")
         if (raw_part_features.norm(dim=-1) == 0).any():
             raise ValueError("Zero raw CLIP feature")
-        raw_for_similarity = F.normalize(raw_part_features, dim=-1, eps=eps)
-
+        # IMPORTANT:
+        # raw_part_features is ALWAYS the student input to the existing
+        # CLIP->DINO projector. Do not replace it with LLaMA.
         self.register_buffer(
             "raw_part_features",
             raw_part_features.contiguous(),
+        )
+
+        # Original behavior: if no external teacher is supplied,
+        # raw CLIP remains the teacher.
+        if teacher_part_features is None:
+            teacher_part_features = raw_part_features
+
+        teacher_part_features = torch.as_tensor(
+            teacher_part_features,
+            dtype=torch.float32,
+        ).detach().clone()
+
+        if teacher_part_features.ndim != 2:
+            raise ValueError(
+                "teacher_part_features must be [N_parts, D], "
+                f"got {tuple(teacher_part_features.shape)}"
+            )
+
+        if teacher_part_features.shape[0] != raw_part_features.shape[0]:
+            raise ValueError(
+                "Student/teacher part count mismatch: "
+                f"{raw_part_features.shape[0]} vs "
+                f"{teacher_part_features.shape[0]}"
+            )
+
+        if not torch.isfinite(teacher_part_features).all():
+            raise ValueError("Nonfinite teacher part bank")
+
+        if (teacher_part_features.norm(dim=-1) == 0).any():
+            raise ValueError("Zero teacher part feature")
+
+        self.register_buffer(
+            "teacher_part_features",
+            teacher_part_features.contiguous(),
+        )
+
+        teacher_for_similarity = F.normalize(
+            teacher_part_features,
+            dim=-1,
+            eps=eps,
         )
 
         if isinstance(object_groups, dict):
@@ -226,22 +268,26 @@ class PartStructureRankLoss(nn.Module):
                 tri[1].contiguous(),
             )
 
-            raw = raw_for_similarity.index_select(0, ids)
-            raw_similarity = raw @ raw.t()
+            teacher = teacher_for_similarity.index_select(
+                0,
+                ids,
+            )
 
-            raw_values = raw_similarity[
+            teacher_similarity = teacher @ teacher.t()
+
+            teacher_values = teacher_similarity[
                 tri[0],
                 tri[1],
             ]
 
-            raw_rank = self._soft_rank(
-                raw_values,
+            teacher_rank = self._soft_rank(
+                teacher_values,
                 self.rank_temperature,
             ).detach()
 
             self.register_buffer(
-                f"raw_rank_{group_index}",
-                raw_rank.contiguous(),
+                f"teacher_rank_{group_index}",
+                teacher_rank.contiguous(),
             )
 
     @staticmethod
@@ -340,9 +386,9 @@ class PartStructureRankLoss(nn.Module):
                 self,
                 f"tri_col_{group_index}",
             )
-            raw_rank = getattr(
+            teacher_rank = getattr(
                 self,
-                f"raw_rank_{group_index}",
+                f"teacher_rank_{group_index}",
             )
 
             projected = projected_all.index_select(
@@ -366,7 +412,7 @@ class PartStructureRankLoss(nn.Module):
 
             loss_o = self._correlation_loss(
                 projected_rank,
-                raw_rank,
+                teacher_rank,
                 eps=self.eps,
             )
 
@@ -393,6 +439,7 @@ class PartStructureRankLoss(nn.Module):
     def from_file(
         cls,
         path,
+        teacher_path=None,
         rank_temperature=0.05,
         min_parts=3,
         eps=1e-6,
@@ -436,14 +483,66 @@ class PartStructureRankLoss(nn.Module):
                 "'object_groups'."
             )
 
+        teacher_features = None
+
+        if teacher_path is not None:
+            teacher_data = torch.load(
+                teacher_path,
+                map_location="cpu",
+            )
+
+            if teacher_data.get("normalized", False) is not False:
+                raise ValueError(
+                    "Expected raw teacher bank: normalized=False"
+                )
+
+            if "features" in teacher_data:
+                teacher_features = teacher_data["features"]
+            elif "raw_features" in teacher_data:
+                teacher_features = teacher_data["raw_features"]
+            else:
+                raise KeyError(
+                    "Teacher bank must contain "
+                    "'features' or 'raw_features'."
+                )
+
+            # Strict controlled-experiment requirement:
+            # rows must represent exactly the same 116 semantic parts.
+            student_names = data.get("class_names")
+            teacher_names = teacher_data.get("class_names")
+
+            if student_names is None or teacher_names is None:
+                raise ValueError(
+                    "Both student and teacher banks must contain class_names"
+                )
+
+            student_names = [str(x) for x in student_names]
+            teacher_names = [str(x) for x in teacher_names]
+
+            if student_names != teacher_names:
+                raise ValueError(
+                    "Student/teacher class_names or row order mismatch"
+                )
+
+            student_groups = {
+                str(k): [int(i) for i in v]
+                for k, v in data["object_groups"].items()
+            }
+            teacher_groups = {
+                str(k): [int(i) for i in v]
+                for k, v in teacher_data["object_groups"].items()
+            }
+
+            if student_groups != teacher_groups:
+                raise ValueError(
+                    "Student/teacher object_groups mismatch"
+                )
+
         return cls(
             raw_part_features=features,
-            object_groups=data[
-                "object_groups"
-            ],
-            rank_temperature=(
-                rank_temperature
-            ),
+            teacher_part_features=teacher_features,
+            object_groups=data["object_groups"],
+            rank_temperature=rank_temperature,
             min_parts=min_parts,
             eps=eps,
         )
@@ -456,13 +555,17 @@ class PartStructureRankLoss(nn.Module):
             projector.project_clip_txt(self.raw_part_features).float(),
             dim=-1, eps=1e-12,
         )
-        raw_unit = F.normalize(self.raw_part_features, dim=-1, eps=self.eps)
+        teacher_unit = F.normalize(
+            self.teacher_part_features,
+            dim=-1,
+            eps=self.eps,
+        )
         values = {}
         for i, name in enumerate(self.object_names):
             ids = getattr(self, f"group_ids_{i}")
             r = getattr(self, f"tri_row_{i}")
             c = getattr(self, f"tri_col_{i}")
-            x, y = raw_unit[ids], projected[ids]
+            x, y = teacher_unit[ids], projected[ids]
             before = (x @ x.T)[r, c].cpu().numpy()
             after = (y @ y.T)[r, c].cpu().numpy()
             rho = float(spearmanr(before, after)[0])

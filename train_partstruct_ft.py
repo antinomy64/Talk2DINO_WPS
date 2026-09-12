@@ -36,6 +36,7 @@ def train_and_eval(
     num_epochs_override=None,
     lr_override=None,
     structure_bank=None,
+    structure_teacher_bank=None,
     structure_weight=0.0,
     rank_temperature=0.05,
     structure_min_parts=3,
@@ -109,6 +110,7 @@ def train_and_eval(
             val_dataset,
             train_cfg,
             structure_bank=structure_bank,
+            structure_teacher_bank=structure_teacher_bank,
             structure_weight=structure_weight,
             rank_temperature=rank_temperature,
             structure_min_parts=structure_min_parts,
@@ -186,6 +188,15 @@ if __name__ == '__main__':
                         help='Optional override of train.lr from the YAML.')
     parser.add_argument('--structure_bank', type=str, default=None,
                         help='PTH containing raw part text features and object_groups.')
+    parser.add_argument(
+        '--structure_teacher_bank',
+        type=str,
+        default=None,
+        help=(
+            'Optional PTH providing the fixed PartStruct teacher relations. '
+            'If omitted, teacher defaults to structure_bank (original behavior).'
+        ),
+    )
     parser.add_argument('--structure_weight', type=float, default=0.0,
                         help='Lambda for L_total = L_InfoNCE + lambda * L_structure.')
     parser.add_argument('--rank_temperature', type=float, default=0.05,
@@ -247,6 +258,7 @@ if __name__ == '__main__':
                    num_epochs_override=args.num_epochs,
                    lr_override=args.lr,
                    structure_bank=args.structure_bank,
+                   structure_teacher_bank=args.structure_teacher_bank,
                    structure_weight=args.structure_weight,
                    rank_temperature=args.rank_temperature,
                    structure_min_parts=args.structure_min_parts)
