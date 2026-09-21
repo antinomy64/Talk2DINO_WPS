@@ -5,3 +5,12 @@ local_exp/
 output/
 segmentation_results/
 weights/
+nightly_full_suit/
+logs/
+__pycache__/
+canonical_lr1e5_50ep
+canonical_supportL_bg054
+canonical_supportL_bg055
+nightly_full_suite
+paper_ablation_nightly_bg055_nopamr
+visualization

@@ -1,0 +1,12 @@
+model:
+  act: tanh
+  hidden_layer: True
+  dino_embed_dim: 768
+  clip_embed_dim: 4096
+
+train:
+  lr: 0.0001
+  ltype: 'infonce'
+  num_epochs: 100
+  batch_size: 128
+  save_best_model: False
