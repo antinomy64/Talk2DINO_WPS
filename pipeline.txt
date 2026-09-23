@@ -1,4 +1,4 @@
-2. 提取 PascalPart-116 的 CLIP part text feature
+# 1. 提取 PascalPart-116 的 CLIP part text feature
 python extract_clip_text_bank.py \
   --classes_source src/open_vocabulary_segmentation/segmentation/datasets/pascalpart116_part.py:PART_CLASSES \
   --out_path feature/pascalpart116_clip_text/pascalpart116_clip_vitb16_subimagenet_raw_reproduce.pt \
@@ -7,7 +7,7 @@ python extract_clip_text_bank.py \
   --device cuda
 
 
-3. 用冻结的 Talk2DINO object-level projector 生成训练 cache
+# 2. 用冻结的 Talk2DINO object-level projector 生成训练 cache
 python extract_predobj_cropaug.py \
   --repo_root . \
   --image_root data/PascalPart116/images/train \
@@ -36,18 +36,18 @@ python extract_predobj_cropaug.py \
   --device cuda
 
 
-4. 训练主方法：Relative Visual Prototype + Shared Orthogonal W
+# 3. 训练主方法：Relative Visual Prototype + Shared Orthogonal W
 python train_relproto_alignemt.py \
   --project_root . \
   --train_dataset feature/pascalpart116_predobj_clip_struct/train_predobj_cropaug_bg055_reproduce.pth \
   --text_bank feature/pascalpart116_clip_text/pascalpart116_clip_vitb16_subimagenet_raw_reproduce.pt \
   --model_config configs/vitb_mlp_infonce.yaml \
   --weights weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth \
-  --out_dir final_exp/relproto_alignment/main_seed123_bg055_L4 \
-  --prototype_max_patches 4 \
-  --epochs 100 \
+  --out_dir final_exp/relproto_alignment/main_seed123_bg055_L8 \
+  --prototype_max_patches 8 \
+  --epochs 30 \
   --batch_size 16 \
-  --lr 1e-3 \
+  --lr 1e-5 \
   --seed 123 \
   --expected_bg_thresh 0.55 \
   --require_pamr \
@@ -55,27 +55,27 @@ python train_relproto_alignemt.py \
   --device cuda
 
 
-5. 把训练得到的 W 合并进 Talk2DINO projector
+# 4. 把训练得到的 W 合并进 Talk2DINO projector
 python bake_predobj_relproto_w_into_projector_final.py \
   --project_root . \
   --projector weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth \
-  --w_checkpoint final_exp/relproto_alignment/main_seed123_bg055_L4/W_last.pt \
+  --w_checkpoint final_exp/relproto_alignment/main_seed123_bg055_L8/W_last.pt \
   --text_bank feature/pascalpart116_clip_text/pascalpart116_clip_vitb16_subimagenet_raw_reproduce.pt \
   --model_config configs/vitb_mlp_infonce.yaml \
-  --output weights/vitb_mlp_infonce_coco2014_reproduce_clean_relproto4_seed123_bg055_reproduce.pth \
+  --output weights/vitb_mlp_infonce_coco2014_reproduce_clean_relproto8_seed123_bg055_reproduce.pth \
   --device cuda \
   --overwrite
 
 
-6. 在 PascalPart-116 上做 full-image evaluation
+# 5. 在 PascalPart-116 上做 full-image evaluation
 python -m torch.distributed.run \
   --nproc_per_node=1 \
   --master_port=32623 \
   src/open_vocabulary_segmentation/main.py \
   --eval \
-  --output output/main_seed123_bg055_L4 \
+  --output output/main_seed123_bg055_L8 \
   --eval_cfg src/open_vocabulary_segmentation/configs/voc116_part/dinotext_voc116_part_vitb_mlp_infonce.yml \
   --eval_base_cfg src/open_vocabulary_segmentation/configs/voc116_part/eval_voc116_part.yml \
   --opts \
-    model.proj_name=vitb_mlp_infonce_coco2014_reproduce_clean_relproto4_seed123_bg055_reproduce \
-    evaluate.pamr=true
+    model.proj_name=vitb_mlp_infonce_coco2014_reproduce_clean_relproto8_seed123_bg055_reproduce \
+    evaluate.pamr=false

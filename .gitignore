@@ -14,3 +14,6 @@ canonical_supportL_bg055
 nightly_full_suite
 paper_ablation_nightly_bg055_nopamr
 visualization
+nightly_ablation_pp116_seed123_20260921
+talk2dino_part_originaltrain_pp116_seed123_20260922
+talk2dino_part_pp116_seed123_20260922

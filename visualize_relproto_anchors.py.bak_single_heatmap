@@ -1,7 +1,6 @@
 import argparse
 import csv
 import math
-import re
 import sys
 from pathlib import Path
 
@@ -424,7 +423,7 @@ def safe_filename(s):
 
 def value_range(a, b, foreground):
     """
-    Shared color scale for epoch0/trained checkpoint for one semantic part.
+    Shared color scale for epoch0/epoch10 for one semantic part.
     This makes visual change directly comparable.
     """
     values = torch.cat(
@@ -451,9 +450,6 @@ def main():
 
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-
-    individual_dir = out_dir / "individual_heatmaps"
-    individual_dir.mkdir(parents=True, exist_ok=True)
 
     print("=" * 90)
     print("RELPROTO ANCHOR VISUALIZATION")
@@ -486,29 +482,13 @@ def main():
         D,
     )
 
-    # e.g. W_epoch_030.pt -> 30
-    epoch_match = re.search(
-        r"W_epoch_(\d+)",
-        Path(args.w_checkpoint).name,
-    )
-    trained_epoch = (
-        int(epoch_match.group(1))
-        if epoch_match is not None
-        else None
-    )
-    trained_epoch_name = (
-        f"Epoch {trained_epoch}"
-        if trained_epoch is not None
-        else "Trained W"
-    )
-
     orth_err = (
         W10.T @ W10
         - torch.eye(D)
     ).abs().max().item()
 
     print(
-        f"{trained_epoch_name} W orthogonality max abs:",
+        "epoch10 W orthogonality max abs:",
         f"{orth_err:.6e}",
     )
 
@@ -670,7 +650,7 @@ def main():
         #
         # row = semantic part
         # col0 = epoch 0
-        # col1 = trained checkpoint
+        # col1 = epoch 10
         #
         # Heatmaps are on the exact 32x32 crop patch coordinate system
         # used by RelProto.
@@ -751,7 +731,7 @@ def main():
                         c0,
                     ),
                     (
-                        trained_epoch_name,
+                        "Epoch 10",
                         score10[j],
                         a10,
                         r10,
@@ -828,98 +808,6 @@ def main():
                 ax.set_xticks([])
                 ax.set_yticks([])
 
-                # ---------------------------------------------
-                # Save this heatmap as an individual PNG.
-                # ---------------------------------------------
-                single_fig, single_ax = plt.subplots(
-                    figsize=(4.5, 4.2)
-                )
-
-                single_im = single_ax.imshow(
-                    masked,
-                    cmap=cmap,
-                    interpolation="nearest",
-                    vmin=vmin,
-                    vmax=vmax,
-                )
-
-                # PredObj foreground boundary.
-                single_ax.contour(
-                    fg_grid.astype(np.float32),
-                    levels=[0.5],
-                    colors="white",
-                    linewidths=0.8,
-                    alpha=0.8,
-                )
-
-                # RelProto anchor.
-                single_ax.scatter(
-                    [ac],
-                    [ar],
-                    marker="*",
-                    s=230,
-                    c="cyan",
-                    edgecolors="black",
-                    linewidths=1.0,
-                    zorder=20,
-                )
-
-                single_ax.set_title(
-                    (
-                        f"{epoch_name}\n"
-                        f"{part_name} [id={pid}]"
-                    ),
-                    fontsize=11,
-                )
-
-                single_ax.set_xticks([])
-                single_ax.set_yticks([])
-
-                single_fig.colorbar(
-                    single_im,
-                    ax=single_ax,
-                    fraction=0.046,
-                    pad=0.04,
-                )
-
-                single_fig.tight_layout()
-
-                obj_tag_ind = safe_filename(
-                    f"{object_no:02d}_{object_name}"
-                )
-                part_tag_ind = safe_filename(
-                    f"{pid:03d}_{part_name}"
-                )
-
-                if col == 0:
-                    epoch_tag = "epoch000"
-                elif trained_epoch is not None:
-                    epoch_tag = f"epoch{trained_epoch:03d}"
-                else:
-                    epoch_tag = "trained"
-
-                individual_path = (
-                    individual_dir
-                    / (
-                        f"{target_stem}_{obj_tag_ind}_"
-                        f"{part_tag_ind}_{epoch_tag}_"
-                        f"{args.heatmap_mode}.png"
-                    )
-                )
-
-                single_fig.savefig(
-                    individual_path,
-                    dpi=300,
-                    bbox_inches="tight",
-                    pad_inches=0.05,
-                )
-                plt.close(single_fig)
-
-                print(
-                    "saved individual:",
-                    individual_path,
-                )
-
                 row_images.append(im)
 
                 summary_rows.append({
@@ -929,15 +817,7 @@ def main():
                     "object_name": object_name,
                     "part_id": pid,
                     "part_name": part_name,
-                    "epoch": (
-                        0
-                        if col == 0
-                        else (
-                            trained_epoch
-                            if trained_epoch is not None
-                            else -1
-                        )
-                    ),
+                    "epoch": 0 if col == 0 else 10,
                     "heatmap_mode": args.heatmap_mode,
                     "anchor_patch_index": anchor,
                     "anchor_row": ar,
