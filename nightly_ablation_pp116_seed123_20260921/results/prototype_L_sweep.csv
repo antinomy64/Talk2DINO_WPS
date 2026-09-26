@@ -1,0 +1,17 @@
+group,run,selector,mapping,L,seed,mIoU,mACC,metric_source,eval_log
+prototype,relative_orthogonal_L01,relative,orthogonal,1,123,30.829999999999995,0.5842,runs/prototype/relative_orthogonal_L01/eval.log,runs/prototype/relative_orthogonal_L01/eval.log
+prototype,relative_orthogonal_L02,relative,orthogonal,2,123,31.47,0.5946,runs/prototype/relative_orthogonal_L02/eval.log,runs/prototype/relative_orthogonal_L02/eval.log
+prototype,relative_orthogonal_L03,relative,orthogonal,3,123,31.77,0.598,runs/prototype/relative_orthogonal_L03/eval.log,runs/prototype/relative_orthogonal_L03/eval.log
+prototype,relative_orthogonal_L04,relative,orthogonal,4,123,32.03,0.6013000000000001,runs/prototype/relative_orthogonal_L04/eval.log,runs/prototype/relative_orthogonal_L04/eval.log
+prototype,relative_orthogonal_L05,relative,orthogonal,5,123,32.22,0.6029,runs/prototype/relative_orthogonal_L05/eval.log,runs/prototype/relative_orthogonal_L05/eval.log
+prototype,relative_orthogonal_L06,relative,orthogonal,6,123,32.39,0.6043999999999999,runs/prototype/relative_orthogonal_L06/eval.log,runs/prototype/relative_orthogonal_L06/eval.log
+prototype,relative_orthogonal_L07,relative,orthogonal,7,123,32.51,0.6053000000000001,runs/prototype/relative_orthogonal_L07/eval.log,runs/prototype/relative_orthogonal_L07/eval.log
+prototype,relative_orthogonal_L08,relative,orthogonal,8,123,32.6,0.6067,runs/prototype/relative_orthogonal_L08/eval.log,runs/prototype/relative_orthogonal_L08/eval.log
+prototype,relative_orthogonal_L09,relative,orthogonal,9,123,32.68,0.6081,runs/prototype/relative_orthogonal_L09/eval.log,runs/prototype/relative_orthogonal_L09/eval.log
+prototype,relative_orthogonal_L10,relative,orthogonal,10,123,32.72,0.6087,runs/prototype/relative_orthogonal_L10/eval.log,runs/prototype/relative_orthogonal_L10/eval.log
+prototype,relative_orthogonal_L11,relative,orthogonal,11,123,32.73,0.6093999999999999,runs/prototype/relative_orthogonal_L11/eval.log,runs/prototype/relative_orthogonal_L11/eval.log
+prototype,relative_orthogonal_L12,relative,orthogonal,12,123,32.73,0.6095,runs/prototype/relative_orthogonal_L12/eval.log,runs/prototype/relative_orthogonal_L12/eval.log
+prototype,relative_orthogonal_L13,relative,orthogonal,13,123,32.73,0.6093,runs/prototype/relative_orthogonal_L13/eval.log,runs/prototype/relative_orthogonal_L13/eval.log
+prototype,relative_orthogonal_L14,relative,orthogonal,14,123,32.72,0.6095,runs/prototype/relative_orthogonal_L14/eval.log,runs/prototype/relative_orthogonal_L14/eval.log
+prototype,relative_orthogonal_L15,relative,orthogonal,15,123,32.71,0.6096,runs/prototype/relative_orthogonal_L15/eval.log,runs/prototype/relative_orthogonal_L15/eval.log
+prototype,relative_orthogonal_L16,relative,orthogonal,16,123,32.7,0.6098,runs/prototype/relative_orthogonal_L16/eval.log,runs/prototype/relative_orthogonal_L16/eval.log

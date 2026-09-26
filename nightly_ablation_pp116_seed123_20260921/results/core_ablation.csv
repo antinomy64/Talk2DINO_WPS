@@ -1,0 +1,6 @@
+group,run,selector,mapping,L,seed,mIoU,mACC,metric_source,eval_log
+core,absolute_linear_L1,absolute,linear,1,123,11.49,0.26239999999999997,runs/core/absolute_linear_L1/eval.log,runs/core/absolute_linear_L1/eval.log
+core,absolute_orthogonal_L1,absolute,orthogonal,1,123,13.51,0.2877,runs/core/absolute_orthogonal_L1/eval.log,runs/core/absolute_orthogonal_L1/eval.log
+core,relative_linear_L8,relative,linear,8,123,29.880000000000003,0.5756,runs/core/relative_linear_L8/eval.log,runs/core/relative_linear_L8/eval.log
+core,relative_orthogonal_L8,relative,orthogonal,8,123,32.6,0.6067,runs/core/relative_orthogonal_L8/eval.log,runs/core/relative_orthogonal_L8/eval.log
+core,talk2dino,none,none,0,123,21.7,0.3962,runs/core/talk2dino/eval.log,runs/core/talk2dino/eval.log
