@@ -1,0 +1,11 @@
+model:
+  act: tanh
+  hidden_layer: true
+  dino_embed_dim: 768
+  starting_checkpoint: weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth
+train:
+  lr: 1.0e-05
+  ltype: infonce
+  num_epochs: 30
+  batch_size: 128
+  save_best_model: false

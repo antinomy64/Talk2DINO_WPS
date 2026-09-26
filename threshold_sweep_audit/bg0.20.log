@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/mnt/sda/master/code/lyx/Talk2DINO_official_bg/audit_partimagenet40_predobj_cache.py", line 660, in <module>
+    main()
+  File "/mnt/sda/master/code/lyx/Talk2DINO_official_bg/audit_partimagenet40_predobj_cache.py", line 218, in main
+    raise FileNotFoundError(cache_path)
+FileNotFoundError: /mnt/sda/master/code/lyx/Talk2DINO_official_bg/feature/partimagenet40_predobj_clip_struct/threshold_sweep/cache_bg0.20.pth
