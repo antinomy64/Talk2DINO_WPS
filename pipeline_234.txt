@@ -1,0 +1,85 @@
+# 1. 提取 ADE20K-Part-234 的 CLIP part text feature
+
+python extract_clip_text_bank.py \
+  --classes_source ade20kpart234_taxonomy.py:PART_CLASSES \
+  --out_path feature/ade20kpart234_clip_text/ade20kpart234_clip_vitb16_subimagenet_raw.pt \
+  --clip_model ViT-B/16 \
+  --template_set sub_imagenet_template \
+  --device cuda
+
+
+# 2. 用冻结的 Talk2DINO object-level projector 生成 ADE234 训练 cache
+#
+# 已确认：
+# image root:
+#   /home/master/dataset/lyx/ADE20KPart234/images/train
+#
+# presence manifest:
+#   /home/master/dataset/lyx/ADE20KPart234/ade20kpart234_train_presence_talk2dino.json
+#
+# projector:
+#   weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth
+#
+# bg_thresh = 0.55
+# PAMR = enabled
+# crop_expand_ratio = 1.2
+#
+# output:
+#   feature/ade20kpart234_predobj_clip_struct/train_predobj_cropaug.pth
+#
+# script:
+#   extract_predobj_cropaug_ade20kpart234.py
+
+
+# 3. 训练主方法：Relative Visual Prototype + Shared Orthogonal W
+
+python train_relproto_alignment_ade20kpart234.py \
+  --project_root . \
+  --train_dataset feature/ade20kpart234_predobj_clip_struct/train_predobj_cropaug.pth \
+  --text_bank feature/ade20kpart234_clip_text/ade20kpart234_clip_vitb16_subimagenet_raw.pt \
+  --model_config configs/vitb_mlp_infonce.yaml \
+  --weights weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth \
+  --out_dir final_exp/relproto_alignment/ade20kpart234_seed123_bg055_L8 \
+  --feature_name cropaug_patch_tokens \
+  --foreground_key pred_obj_mask_patch \
+  --part_id_key part_category_id \
+  --part_name_key part_class_name \
+  --clip_model ViT-B/16 \
+  --template_set sub_imagenet_template \
+  --prototype_max_patches 8 \
+  --epochs 30 \
+  --batch_size 16 \
+  --lr 1e-5 \
+  --seed 123 \
+  --expected_bg_thresh 0.55 \
+  --require_pamr \
+  --require_cache_projector_match \
+  --device cuda
+
+
+# 4. 把 epoch 30 的 W 合并进 Talk2DINO projector
+
+python bake_ade20kpart234_relproto_w.py \
+  --project_root . \
+  --projector weights/vitb_mlp_infonce_coco2014_reproduce_clean.pth \
+  --w_checkpoint final_exp/relproto_alignment/ade20kpart234_seed123_bg055_L8/W_epoch_030.pt \
+  --text_bank feature/ade20kpart234_clip_text/ade20kpart234_clip_vitb16_subimagenet_raw.pt \
+  --model_config configs/vitb_mlp_infonce.yaml \
+  --output weights/vitb_mlp_infonce_ade20kpart234_L8_ep030_baked.pth \
+  --device cuda \
+  --overwrite
+
+
+# 5. 在 ADE20K-Part-234 上做 full-image evaluation
+
+CUDA_VISIBLE_DEVICES=0 python -m torch.distributed.run \
+  --nproc_per_node=1 \
+  --master_port=32652 \
+  src/open_vocabulary_segmentation/main.py \
+  --eval \
+  --output output/ours_ade20kpart234_seed123_bg055_L8_ep030 \
+  --eval_cfg src/open_vocabulary_segmentation/configs/ade20kpart234/dinotext_ade20kpart234_vitb_mlp_infonce.yml \
+  --eval_base_cfg src/open_vocabulary_segmentation/configs/ade20kpart234/eval_ade20kpart234.yml \
+  --opts \
+    model.proj_name=vitb_mlp_infonce_ade20kpart234_L8_ep030_baked \
+    evaluate.pamr=false
