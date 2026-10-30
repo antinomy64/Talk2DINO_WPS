@@ -1,0 +1,152 @@
+--- original_train_pp116_softsingle_dual.py
++++ night_ear_train.py
+@@ -42,7 +42,7 @@
+ 
+ import train_relproto_alignemt as original
+ 
+-VERSION = "pp116_nightly_softsingle_presence_vs_objectfull_v1"
++VERSION = "pp116_ear_gradient_attribution_ablation_v1"
+ 
+ 
+ def soft_relative_prototypes(
+@@ -171,6 +171,10 @@
+     loss_parts: list[torch.Tensor | None] = [None] * len(examples)
+     loss_nce_parts: list[torch.Tensor | None] = [None] * len(examples)
+     loss_rel_parts: list[torch.Tensor | None] = [None] * len(examples)
++    loss_ear_parts: list[torch.Tensor | None] = [None] * len(examples)
++    loss_other_parts: list[torch.Tensor | None] = [None] * len(examples)
++    loss_other_ear_neg_surrogate_parts: list[torch.Tensor | None] = [None] * len(examples)
++    ear_occurrences = 0
+     stat_sum = defaultdict(float)
+     part_count = 0
+     num_struct_samples = 0
+@@ -209,7 +213,34 @@
+             logits.reshape(-1, original.NUM_PARTS),
+             pids.reshape(-1), reduction="none",
+         ).reshape(B, K)
+-        nce_per_annotation = part_losses.mean(dim=1)
++        # EXACT decomposition of the original equal-annotation NCE: each part
++        # retains coefficient 1/K and each annotation retains coefficient 1/N.
++        # "other" losses retain Ear as a negative logit in all 116 classes.
++        ear_mask = torch.zeros_like(pids, dtype=torch.bool)
++        for ear_pid in args._ear_ids:
++            ear_mask |= (pids == ear_pid)
++        ear_occurrences += int(ear_mask.sum().item())
++        ear_nce_per_annotation = (part_losses * ear_mask.to(part_losses.dtype)).mean(dim=1)
++        other_nce_per_annotation = (part_losses * (~ear_mask).to(part_losses.dtype)).mean(dim=1)
++        # Exact local logit-gradient slice of non-Ear-positive NCE:
++        # d CE(target!=ear)/d logit_ear = softmax_prob_ear. Treat coefficients
++        # as CONSTANT to construct a gradient surrogate; never use this as a
++        # training loss. All six Ear logits are negative for non-Ear targets.
++        ear_ids_t = torch.as_tensor(args._ear_ids, device=device, dtype=torch.long)
++        neg_ear_prob = logits.detach().softmax(dim=-1).index_select(-1, ear_ids_t)
++        neg_ear_logit = logits.index_select(-1, ear_ids_t)
++        other_ear_neg_per_annotation = ((neg_ear_prob * neg_ear_logit).sum(-1)
++            * (~ear_mask).to(part_losses.dtype)).mean(dim=1)
++        if args.positive_mode == "full":
++            nce_per_annotation = part_losses.mean(dim=1)
++        elif args.positive_mode == "drop_ear":
++            nce_per_annotation = other_nce_per_annotation
++        elif args.positive_mode == "only_ear":
++            nce_per_annotation = ear_nce_per_annotation
++        elif args.positive_mode == "none":
++            nce_per_annotation = part_losses.sum(dim=1) * 0.0
++        else:
++            raise ValueError(f"unknown positive_mode={args.positive_mode}")
+ 
+         if K >= 3 and args.lambda_struct > 0:
+             local_g = frozen_relations[pids.unsqueeze(-1), pids.unsqueeze(-2)]
+@@ -226,6 +257,9 @@
+             loss_parts[i] = total_per_annotation[j]
+             loss_nce_parts[i] = nce_per_annotation[j]
+             loss_rel_parts[i] = rank_per_annotation[j]
++            loss_ear_parts[i] = ear_nce_per_annotation[j]
++            loss_other_parts[i] = other_nce_per_annotation[j]
++            loss_other_ear_neg_surrogate_parts[i] = other_ear_neg_per_annotation[j]
+         num_struct_samples += int((struct_active > 0).sum().item())
+         part_count += B * K
+         with torch.no_grad():
+@@ -244,6 +278,14 @@
+     total_loss = torch.stack([v for v in loss_parts if v is not None]).mean()
+     nce_loss = torch.stack([v for v in loss_nce_parts if v is not None]).mean()
+     rel_loss = torch.stack([v for v in loss_rel_parts if v is not None]).mean()
++    ear_loss = torch.stack([v for v in loss_ear_parts if v is not None]).mean()
++    other_loss = torch.stack([v for v in loss_other_parts if v is not None]).mean()
++    other_ear_neg_gradient_surrogate = torch.stack(
++        [v for v in loss_other_ear_neg_surrogate_parts if v is not None]).mean()
++    # When only-ear is requested, a batch with no Ear target must still
++    # produce a well-defined zero gradient (rather than backward() crashing).
++    if not total_loss.requires_grad:
++        total_loss = total_loss + all_text.sum() * 0.0
+     if not torch.isfinite(total_loss):
+         raise RuntimeError("nonfinite train loss")
+ 
+@@ -260,9 +302,16 @@
+         "mean_effective_patch_count": stat_sum["effective_patch_count"] / part_count,
+         "mean_weighted_margin": stat_sum["mean_weighted_margin"] / part_count,
+         "single_part_annotation_fraction": stat_sum["single_part_count"] / num_samples,
++        "ear_positive_occurrences": float(ear_occurrences),
++        "loss_ear_nce_unmasked": float(ear_loss.detach()),
++        "loss_other_nce_unmasked": float(other_loss.detach()),
+     }
+     # Return separated scalars for a first-batch structural gradient sanity check.
+-    return total_loss, diag_out, {"nce": nce_loss, "relation": rel_loss}
++    return total_loss, diag_out, {
++        "nce": nce_loss, "relation": rel_loss,
++        "ear": ear_loss, "other": other_loss,
++        "other_ear_negative_gradient_surrogate": other_ear_neg_gradient_surrogate,
++    }
+ 
+ 
+ def do_train(*, examples, base_bank_cpu, args, out_dir, text_info, projector_info, preflight):
+@@ -272,6 +321,21 @@
+     original.set_seed(args.seed)
+     if torch.cuda.is_available():
+         torch.backends.cuda.matmul.allow_tf32 = False
++    # Resolve all six Ear classes from the exact 116-way CLIP bank, not a
++    # brittle manually typed subset. This reads TEXT LABELS only, not part GT.
++    text_path = Path(args.text_bank)
++    if not text_path.is_absolute():
++        text_path = Path(args.project_root) / text_path
++    bank_payload = original.torch_load(text_path)
++    names = bank_payload.get("class_names", bank_payload.get("classnames", bank_payload.get("names")))
++    if names is None or len(names) != original.NUM_PARTS:
++        raise RuntimeError("cannot resolve the exact 116-way text vocabulary")
++    ears = tuple(i for i, n in enumerate(names) if str(n).endswith("'s ear"))
++    if len(ears) != 6:
++        raise RuntimeError(f"expected 6 ear classes, found {[(i,names[i]) for i in ears]}")
++    args._ear_ids = ears
++    print("[EAR ABLA]",args.positive_mode,"lambda_struct",args.lambda_struct,
++          "ear_classes",[(i,names[i]) for i in ears], flush=True)
+     base_bank = original.normalize_last(base_bank_cpu.to(device=device, dtype=torch.float32).detach())
+     frozen_relations = (base_bank @ base_bank.T).detach()  # NOT current adapted text
+     loader = DataLoader(
+@@ -290,6 +354,7 @@
+         "mean_triplets_per_annotation", "mean_positive_count_multi",
+         "fallback_fraction_multi", "mean_effective_patch_count", "mean_weighted_margin",
+         "single_part_annotation_fraction",
++        "ear_positive_occurrences", "loss_ear_nce_unmasked", "loss_other_nce_unmasked",
+     )
+     for epoch in range(1, args.epochs + 1):
+         if device.type == "cuda":
+@@ -360,6 +425,9 @@
+             "loss": "116-way visual-to-text InfoNCE with stopgrad target PLUS relational ranking "
+                     "with gradient through V(W); equal-annotation mean; same for both arms",
+             "part_supervision": args.part_setting,
++            "ear_positive_ablation": args.positive_mode,
++            "ear_ids": list(args._ear_ids),
++            "loss_normalization": "equal-annotation; original K denominators retained after masking",
+             "candidate_source": ("image-specific present part classes" if args.part_setting == "presence"
+                                  else "ALL taxonomy part classes under known object"),
+             "W": "one 768x768 shared orthogonal map, Adam + per-step SVD retraction",
+@@ -395,6 +463,10 @@
+         epochs=100, batch_size=16, lr=1e-5, seed=123,
+     )
+     p.add_argument("--part_setting", choices=("presence", "objectfull"), required=True)
++    p.add_argument("--positive_mode", choices=("full", "drop_ear", "only_ear", "none"),
++                   default="full", help="Which positive-target NCE terms contribute."
++                   " Ear ALWAYS remains among all 116 logits/negatives;"
++                   " candidate sets and Structure Loss are unchanged.")
+     p.add_argument("--soft_temperature", type=float, default=0.05)
+     p.add_argument("--nce_temperature", type=float, default=0.07)
+     p.add_argument("--lambda_struct", type=float, default=4.0)

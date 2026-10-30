@@ -1,0 +1,170 @@
+--- baseline_reference.py
++++ ear_transfer_train.py
+@@ -42,7 +42,7 @@
+ 
+ import train_relproto_alignemt as original
+ 
+-VERSION = "pp116_nightly_softsingle_presence_vs_objectfull_v1"
++VERSION = "pp116_ear_transfer_leave_one_out_v2"
+ 
+ 
+ def soft_relative_prototypes(
+@@ -171,6 +171,9 @@
+     loss_parts: list[torch.Tensor | None] = [None] * len(examples)
+     loss_nce_parts: list[torch.Tensor | None] = [None] * len(examples)
+     loss_rel_parts: list[torch.Tensor | None] = [None] * len(examples)
++    loss_target_parts: list[torch.Tensor | None] = [None] * len(examples)
++    loss_other_ears_parts: list[torch.Tensor | None] = [None] * len(examples)
++    loss_non_ear_parts: list[torch.Tensor | None] = [None] * len(examples)
+     stat_sum = defaultdict(float)
+     part_count = 0
+     num_struct_samples = 0
+@@ -209,7 +212,20 @@
+             logits.reshape(-1, original.NUM_PARTS),
+             pids.reshape(-1), reduction="none",
+         ).reshape(B, K)
+-        nce_per_annotation = part_losses.mean(dim=1)
++        # Keep original 1/K and equal-annotation denominators. Only the CE
++        # POSITIVE TARGET is masked, never the 116-way denominator or part candidates.
++        allow = args._positive_allow[pids]
++        nce_per_annotation = (part_losses * allow.to(part_losses.dtype)).mean(dim=1)
++        target_mask = (pids == args._target_pid)
++        is_ear = torch.zeros_like(pids, dtype=torch.bool)
++        for ear_id in args._ear_ids:
++            is_ear |= (pids == ear_id)
++        target_loss = (part_losses * target_mask).mean(dim=1)
++        other_ears_loss = (part_losses * (is_ear & ~target_mask)).mean(dim=1)
++        non_ear_loss = (part_losses * ~is_ear).mean(dim=1)
++        stat_sum["positive_terms_used"] += float(allow.sum().item())
++        stat_sum["positive_terms_masked"] += float((~allow).sum().item())
++        stat_sum["target_positive_terms"] += float((pids == args._target_pid).sum().item())
+ 
+         if K >= 3 and args.lambda_struct > 0:
+             local_g = frozen_relations[pids.unsqueeze(-1), pids.unsqueeze(-2)]
+@@ -226,6 +242,9 @@
+             loss_parts[i] = total_per_annotation[j]
+             loss_nce_parts[i] = nce_per_annotation[j]
+             loss_rel_parts[i] = rank_per_annotation[j]
++            loss_target_parts[i] = target_loss[j]
++            loss_other_ears_parts[i] = other_ears_loss[j]
++            loss_non_ear_parts[i] = non_ear_loss[j]
+         num_struct_samples += int((struct_active > 0).sum().item())
+         part_count += B * K
+         with torch.no_grad():
+@@ -260,9 +279,66 @@
+         "mean_effective_patch_count": stat_sum["effective_patch_count"] / part_count,
+         "mean_weighted_margin": stat_sum["mean_weighted_margin"] / part_count,
+         "single_part_annotation_fraction": stat_sum["single_part_count"] / num_samples,
++        "positive_terms_used": stat_sum["positive_terms_used"],
++        "positive_terms_masked": stat_sum["positive_terms_masked"],
++        "target_positive_terms": stat_sum["target_positive_terms"],
+     }
+-    # Return separated scalars for a first-batch structural gradient sanity check.
+-    return total_loss, diag_out, {"nce": nce_loss, "relation": rel_loss}
++    # EXACT full-loss component breakdown; each part keeps original K weight.
++    components = {
++        "nce": nce_loss, "relation": rel_loss,
++        "target": torch.stack([v for v in loss_target_parts if v is not None]).mean(),
++        "other_ears": torch.stack([v for v in loss_other_ears_parts if v is not None]).mean(),
++        "non_ear": torch.stack([v for v in loss_non_ear_parts if v is not None]).mean(),
++    }
++    return total_loss, diag_out, components
++
++
++def build_positive_mask(class_names, target_ear, positive_mode):
++    # Only text class names are used to resolve IDs. NO GT/masks in training.
++    if len(class_names) != original.NUM_PARTS:
++        raise RuntimeError("Expected complete 116-way CLIP text taxonomy")
++    ear_ids = [i for i, name in enumerate(class_names) if str(name).endswith("'s ear")]
++    if len(ear_ids) != 6:
++        raise RuntimeError(f"Expected six Ear classes, found: {ear_ids}")
++    target_name = target_ear + "'s ear"
++    if target_name not in class_names:
++        raise RuntimeError(f"Unknown target {target_name!r}")
++    target_pid = list(class_names).index(target_name)
++    ids = set(range(len(class_names)))
++    ears = set(ear_ids)
++    tgt = {target_pid}
++    mapping = {
++        "full": ids,
++        "drop_target": ids - tgt,
++        "target_plus_non_ear": (ids - ears) | tgt,
++        "other_five_ears": ears - tgt,
++        "only_target": tgt,
++        "all_ears": ears,
++        "non_ear": ids - ears,
++    }
++    if positive_mode not in mapping:
++        raise ValueError(f"Unsupported mode {positive_mode}")
++    return target_pid, tuple(ear_ids), mapping[positive_mode]
++
++
++def resolve_training_mask(args, device):
++    bank_path = Path(args.text_bank)
++    if not bank_path.is_absolute():
++        bank_path = Path(args.project_root) / bank_path
++    payload = original.torch_load(bank_path)
++    names = payload.get("class_names", payload.get("classnames", payload.get("names")))
++    if names is None:
++        raise RuntimeError("CLIP text bank must expose class_names or classnames")
++    names = [str(x) for x in names]
++    target_pid, ear_ids, positive_ids = build_positive_mask(names, args.target_ear, args.positive_mode)
++    allow = torch.zeros(len(names), dtype=torch.bool, device=device)
++    allow[list(sorted(positive_ids))] = True
++    args._target_pid = target_pid
++    args._ear_ids = ear_ids
++    args._positive_allow = allow
++    print(f"[TRANSFER] target={names[target_pid]} id={target_pid} positive_mode={args.positive_mode} "
++          f"allowed_positive={len(positive_ids)}/{len(names)} lambda={args.lambda_struct} "
++          f"ear_ids={ear_ids}", flush=True)
+ 
+ 
+ def do_train(*, examples, base_bank_cpu, args, out_dir, text_info, projector_info, preflight):
+@@ -270,6 +346,7 @@
+     if device.type == "cuda" and not torch.cuda.is_available():
+         raise RuntimeError("CUDA is unavailable")
+     original.set_seed(args.seed)
++    resolve_training_mask(args, device)
+     if torch.cuda.is_available():
+         torch.backends.cuda.matmul.allow_tf32 = False
+     base_bank = original.normalize_last(base_bank_cpu.to(device=device, dtype=torch.float32).detach())
+@@ -289,7 +366,7 @@
+         "loss_total", "loss_nce", "loss_relation", "structure_active_fraction",
+         "mean_triplets_per_annotation", "mean_positive_count_multi",
+         "fallback_fraction_multi", "mean_effective_patch_count", "mean_weighted_margin",
+-        "single_part_annotation_fraction",
++        "single_part_annotation_fraction", "positive_terms_used", "positive_terms_masked", "target_positive_terms",
+     )
+     for epoch in range(1, args.epochs + 1):
+         if device.type == "cuda":
+@@ -346,7 +423,7 @@
+         original.write_csv(history, out_dir / "training_history.csv")
+         ckpt = original.checkpoint_payload(
+             W=W, optimizer=optimizer, epoch=epoch, global_step=global_step,
+-            history=history, args=args, text_info=text_info,
++            history=history, args=argparse.Namespace(**{k:v for k,v in vars(args).items() if not k.startswith("_")}), text_info=text_info,
+             projector_info=projector_info, preflight=preflight,
+         )
+         ckpt["format"] = VERSION
+@@ -360,6 +437,10 @@
+             "loss": "116-way visual-to-text InfoNCE with stopgrad target PLUS relational ranking "
+                     "with gradient through V(W); equal-annotation mean; same for both arms",
+             "part_supervision": args.part_setting,
++            "transfer_ablation": {"target_ear": args.target_ear, "target_pid": args._target_pid,
++                                  "positive_mode": args.positive_mode, "ear_ids": list(args._ear_ids),
++                                  "num_positive_classes": int(args._positive_allow.sum().item()),
++                                  "normalization": "original 1/K and equal annotation; no renormalization"},
+             "candidate_source": ("image-specific present part classes" if args.part_setting == "presence"
+                                  else "ALL taxonomy part classes under known object"),
+             "W": "one 768x768 shared orthogonal map, Adam + per-step SVD retraction",
+@@ -395,6 +476,10 @@
+         epochs=100, batch_size=16, lr=1e-5, seed=123,
+     )
+     p.add_argument("--part_setting", choices=("presence", "objectfull"), required=True)
++    p.add_argument("--target_ear", choices=("cat", "cow", "dog", "horse", "person", "sheep"),
++                   required=True)
++    p.add_argument("--positive_mode", choices=("full", "drop_target", "target_plus_non_ear",
++                        "other_five_ears", "only_target", "all_ears", "non_ear"), required=True)
+     p.add_argument("--soft_temperature", type=float, default=0.05)
+     p.add_argument("--nce_temperature", type=float, default=0.07)
+     p.add_argument("--lambda_struct", type=float, default=4.0)

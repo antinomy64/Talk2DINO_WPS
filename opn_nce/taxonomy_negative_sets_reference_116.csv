@@ -1,0 +1,117 @@
+﻿part_id,positive_part,same_object_negative_count,cross_object_same_name_negative_count,total_negative_count,same_object_negatives,cross_object_same_name_negatives
+0,aeroplane's body,5,1,6,aeroplane's stern; aeroplane's wing; aeroplane's tail; aeroplane's engine; aeroplane's wheel,bottle's body
+1,aeroplane's stern,5,0,5,aeroplane's body; aeroplane's wing; aeroplane's tail; aeroplane's engine; aeroplane's wheel,
+2,aeroplane's wing,5,1,6,aeroplane's body; aeroplane's stern; aeroplane's tail; aeroplane's engine; aeroplane's wheel,bird's wing
+3,aeroplane's tail,5,6,11,aeroplane's body; aeroplane's stern; aeroplane's wing; aeroplane's engine; aeroplane's wheel,bird's tail; cat's tail; cow's tail; dog's tail; horse's tail; sheep's tail
+4,aeroplane's engine,5,0,5,aeroplane's body; aeroplane's stern; aeroplane's wing; aeroplane's tail; aeroplane's wheel,
+5,aeroplane's wheel,5,4,9,aeroplane's body; aeroplane's stern; aeroplane's wing; aeroplane's tail; aeroplane's engine,bicycle's wheel; bus's wheel; car's wheel; motorbike's wheel
+6,bicycle's wheel,4,4,8,bicycle's saddle; bicycle's handlebar; bicycle's chainwheel; bicycle's headlight,aeroplane's wheel; bus's wheel; car's wheel; motorbike's wheel
+7,bicycle's saddle,4,1,5,bicycle's wheel; bicycle's handlebar; bicycle's chainwheel; bicycle's headlight,motorbike's saddle
+8,bicycle's handlebar,4,1,5,bicycle's wheel; bicycle's saddle; bicycle's chainwheel; bicycle's headlight,motorbike's handlebar
+9,bicycle's chainwheel,4,0,4,bicycle's wheel; bicycle's saddle; bicycle's handlebar; bicycle's headlight,
+10,bicycle's headlight,4,4,8,bicycle's wheel; bicycle's saddle; bicycle's handlebar; bicycle's chainwheel,bus's headlight; car's headlight; motorbike's headlight; train's headlight
+11,bird's wing,8,1,9,bird's tail; bird's head; bird's eye; bird's beak; bird's torso; bird's neck; bird's leg; bird's foot,aeroplane's wing
+12,bird's tail,8,6,14,bird's wing; bird's head; bird's eye; bird's beak; bird's torso; bird's neck; bird's leg; bird's foot,aeroplane's tail; cat's tail; cow's tail; dog's tail; horse's tail; sheep's tail
+13,bird's head,8,7,15,bird's wing; bird's tail; bird's eye; bird's beak; bird's torso; bird's neck; bird's leg; bird's foot,cat's head; cow's head; dog's head; horse's head; person's head; sheep's head; train's head
+14,bird's eye,8,6,14,bird's wing; bird's tail; bird's head; bird's beak; bird's torso; bird's neck; bird's leg; bird's foot,cat's eye; cow's eye; dog's eye; horse's eye; person's eye; sheep's eye
+15,bird's beak,8,0,8,bird's wing; bird's tail; bird's head; bird's eye; bird's torso; bird's neck; bird's leg; bird's foot,
+16,bird's torso,8,6,14,bird's wing; bird's tail; bird's head; bird's eye; bird's beak; bird's neck; bird's leg; bird's foot,cat's torso; cow's torso; dog's torso; horse's torso; person's torso; sheep's torso
+17,bird's neck,8,6,14,bird's wing; bird's tail; bird's head; bird's eye; bird's beak; bird's torso; bird's leg; bird's foot,cat's neck; cow's neck; dog's neck; horse's neck; person's neck; sheep's neck
+18,bird's leg,8,6,14,bird's wing; bird's tail; bird's head; bird's eye; bird's beak; bird's torso; bird's neck; bird's foot,cat's leg; cow's leg; dog's leg; horse's leg; person's leg; sheep's leg
+19,bird's foot,8,1,9,bird's wing; bird's tail; bird's head; bird's eye; bird's beak; bird's torso; bird's neck; bird's leg,person's foot
+20,bottle's body,1,1,2,bottle's cap,aeroplane's body
+21,bottle's cap,1,0,1,bottle's body,
+22,bus's wheel,9,4,13,bus's headlight; bus's front; bus's side; bus's back; bus's roof; bus's mirror; bus's license plate; bus's door; bus's window,aeroplane's wheel; bicycle's wheel; car's wheel; motorbike's wheel
+23,bus's headlight,9,4,13,bus's wheel; bus's front; bus's side; bus's back; bus's roof; bus's mirror; bus's license plate; bus's door; bus's window,bicycle's headlight; car's headlight; motorbike's headlight; train's headlight
+24,bus's front,9,2,11,bus's wheel; bus's headlight; bus's side; bus's back; bus's roof; bus's mirror; bus's license plate; bus's door; bus's window,car's front; train's front
+25,bus's side,9,2,11,bus's wheel; bus's headlight; bus's front; bus's back; bus's roof; bus's mirror; bus's license plate; bus's door; bus's window,car's side; train's side
+26,bus's back,9,2,11,bus's wheel; bus's headlight; bus's front; bus's side; bus's roof; bus's mirror; bus's license plate; bus's door; bus's window,car's back; train's back
+27,bus's roof,9,2,11,bus's wheel; bus's headlight; bus's front; bus's side; bus's back; bus's mirror; bus's license plate; bus's door; bus's window,car's roof; train's roof
+28,bus's mirror,9,1,10,bus's wheel; bus's headlight; bus's front; bus's side; bus's back; bus's roof; bus's license plate; bus's door; bus's window,car's mirror
+29,bus's license plate,9,1,10,bus's wheel; bus's headlight; bus's front; bus's side; bus's back; bus's roof; bus's mirror; bus's door; bus's window,car's license plate
+30,bus's door,9,1,10,bus's wheel; bus's headlight; bus's front; bus's side; bus's back; bus's roof; bus's mirror; bus's license plate; bus's window,car's door
+31,bus's window,9,1,10,bus's wheel; bus's headlight; bus's front; bus's side; bus's back; bus's roof; bus's mirror; bus's license plate; bus's door,car's window
+32,car's wheel,9,4,13,car's headlight; car's front; car's side; car's back; car's roof; car's mirror; car's license plate; car's door; car's window,aeroplane's wheel; bicycle's wheel; bus's wheel; motorbike's wheel
+33,car's headlight,9,4,13,car's wheel; car's front; car's side; car's back; car's roof; car's mirror; car's license plate; car's door; car's window,bicycle's headlight; bus's headlight; motorbike's headlight; train's headlight
+34,car's front,9,2,11,car's wheel; car's headlight; car's side; car's back; car's roof; car's mirror; car's license plate; car's door; car's window,bus's front; train's front
+35,car's side,9,2,11,car's wheel; car's headlight; car's front; car's back; car's roof; car's mirror; car's license plate; car's door; car's window,bus's side; train's side
+36,car's back,9,2,11,car's wheel; car's headlight; car's front; car's side; car's roof; car's mirror; car's license plate; car's door; car's window,bus's back; train's back
+37,car's roof,9,2,11,car's wheel; car's headlight; car's front; car's side; car's back; car's mirror; car's license plate; car's door; car's window,bus's roof; train's roof
+38,car's mirror,9,1,10,car's wheel; car's headlight; car's front; car's side; car's back; car's roof; car's license plate; car's door; car's window,bus's mirror
+39,car's license plate,9,1,10,car's wheel; car's headlight; car's front; car's side; car's back; car's roof; car's mirror; car's door; car's window,bus's license plate
+40,car's door,9,1,10,car's wheel; car's headlight; car's front; car's side; car's back; car's roof; car's mirror; car's license plate; car's window,bus's door
+41,car's window,9,1,10,car's wheel; car's headlight; car's front; car's side; car's back; car's roof; car's mirror; car's license plate; car's door,bus's window
+42,cat's tail,8,6,14,cat's head; cat's eye; cat's torso; cat's neck; cat's leg; cat's nose; cat's paw; cat's ear,aeroplane's tail; bird's tail; cow's tail; dog's tail; horse's tail; sheep's tail
+43,cat's head,8,7,15,cat's tail; cat's eye; cat's torso; cat's neck; cat's leg; cat's nose; cat's paw; cat's ear,bird's head; cow's head; dog's head; horse's head; person's head; sheep's head; train's head
+44,cat's eye,8,6,14,cat's tail; cat's head; cat's torso; cat's neck; cat's leg; cat's nose; cat's paw; cat's ear,bird's eye; cow's eye; dog's eye; horse's eye; person's eye; sheep's eye
+45,cat's torso,8,6,14,cat's tail; cat's head; cat's eye; cat's neck; cat's leg; cat's nose; cat's paw; cat's ear,bird's torso; cow's torso; dog's torso; horse's torso; person's torso; sheep's torso
+46,cat's neck,8,6,14,cat's tail; cat's head; cat's eye; cat's torso; cat's leg; cat's nose; cat's paw; cat's ear,bird's neck; cow's neck; dog's neck; horse's neck; person's neck; sheep's neck
+47,cat's leg,8,6,14,cat's tail; cat's head; cat's eye; cat's torso; cat's neck; cat's nose; cat's paw; cat's ear,bird's leg; cow's leg; dog's leg; horse's leg; person's leg; sheep's leg
+48,cat's nose,8,2,10,cat's tail; cat's head; cat's eye; cat's torso; cat's neck; cat's leg; cat's paw; cat's ear,dog's nose; person's nose
+49,cat's paw,8,1,9,cat's tail; cat's head; cat's eye; cat's torso; cat's neck; cat's leg; cat's nose; cat's ear,dog's paw
+50,cat's ear,8,5,13,cat's tail; cat's head; cat's eye; cat's torso; cat's neck; cat's leg; cat's nose; cat's paw,cow's ear; dog's ear; horse's ear; person's ear; sheep's ear
+51,cow's tail,8,6,14,cow's head; cow's eye; cow's torso; cow's neck; cow's leg; cow's ear; cow's muzzle; cow's horn,aeroplane's tail; bird's tail; cat's tail; dog's tail; horse's tail; sheep's tail
+52,cow's head,8,7,15,cow's tail; cow's eye; cow's torso; cow's neck; cow's leg; cow's ear; cow's muzzle; cow's horn,bird's head; cat's head; dog's head; horse's head; person's head; sheep's head; train's head
+53,cow's eye,8,6,14,cow's tail; cow's head; cow's torso; cow's neck; cow's leg; cow's ear; cow's muzzle; cow's horn,bird's eye; cat's eye; dog's eye; horse's eye; person's eye; sheep's eye
+54,cow's torso,8,6,14,cow's tail; cow's head; cow's eye; cow's neck; cow's leg; cow's ear; cow's muzzle; cow's horn,bird's torso; cat's torso; dog's torso; horse's torso; person's torso; sheep's torso
+55,cow's neck,8,6,14,cow's tail; cow's head; cow's eye; cow's torso; cow's leg; cow's ear; cow's muzzle; cow's horn,bird's neck; cat's neck; dog's neck; horse's neck; person's neck; sheep's neck
+56,cow's leg,8,6,14,cow's tail; cow's head; cow's eye; cow's torso; cow's neck; cow's ear; cow's muzzle; cow's horn,bird's leg; cat's leg; dog's leg; horse's leg; person's leg; sheep's leg
+57,cow's ear,8,5,13,cow's tail; cow's head; cow's eye; cow's torso; cow's neck; cow's leg; cow's muzzle; cow's horn,cat's ear; dog's ear; horse's ear; person's ear; sheep's ear
+58,cow's muzzle,8,3,11,cow's tail; cow's head; cow's eye; cow's torso; cow's neck; cow's leg; cow's ear; cow's horn,dog's muzzle; horse's muzzle; sheep's muzzle
+59,cow's horn,8,1,9,cow's tail; cow's head; cow's eye; cow's torso; cow's neck; cow's leg; cow's ear; cow's muzzle,sheep's horn
+60,dog's tail,9,6,15,dog's head; dog's eye; dog's torso; dog's neck; dog's leg; dog's nose; dog's paw; dog's ear; dog's muzzle,aeroplane's tail; bird's tail; cat's tail; cow's tail; horse's tail; sheep's tail
+61,dog's head,9,7,16,dog's tail; dog's eye; dog's torso; dog's neck; dog's leg; dog's nose; dog's paw; dog's ear; dog's muzzle,bird's head; cat's head; cow's head; horse's head; person's head; sheep's head; train's head
+62,dog's eye,9,6,15,dog's tail; dog's head; dog's torso; dog's neck; dog's leg; dog's nose; dog's paw; dog's ear; dog's muzzle,bird's eye; cat's eye; cow's eye; horse's eye; person's eye; sheep's eye
+63,dog's torso,9,6,15,dog's tail; dog's head; dog's eye; dog's neck; dog's leg; dog's nose; dog's paw; dog's ear; dog's muzzle,bird's torso; cat's torso; cow's torso; horse's torso; person's torso; sheep's torso
+64,dog's neck,9,6,15,dog's tail; dog's head; dog's eye; dog's torso; dog's leg; dog's nose; dog's paw; dog's ear; dog's muzzle,bird's neck; cat's neck; cow's neck; horse's neck; person's neck; sheep's neck
+65,dog's leg,9,6,15,dog's tail; dog's head; dog's eye; dog's torso; dog's neck; dog's nose; dog's paw; dog's ear; dog's muzzle,bird's leg; cat's leg; cow's leg; horse's leg; person's leg; sheep's leg
+66,dog's nose,9,2,11,dog's tail; dog's head; dog's eye; dog's torso; dog's neck; dog's leg; dog's paw; dog's ear; dog's muzzle,cat's nose; person's nose
+67,dog's paw,9,1,10,dog's tail; dog's head; dog's eye; dog's torso; dog's neck; dog's leg; dog's nose; dog's ear; dog's muzzle,cat's paw
+68,dog's ear,9,5,14,dog's tail; dog's head; dog's eye; dog's torso; dog's neck; dog's leg; dog's nose; dog's paw; dog's muzzle,cat's ear; cow's ear; horse's ear; person's ear; sheep's ear
+69,dog's muzzle,9,3,12,dog's tail; dog's head; dog's eye; dog's torso; dog's neck; dog's leg; dog's nose; dog's paw; dog's ear,cow's muzzle; horse's muzzle; sheep's muzzle
+70,horse's tail,8,6,14,horse's head; horse's eye; horse's torso; horse's neck; horse's leg; horse's ear; horse's muzzle; horse's hoof,aeroplane's tail; bird's tail; cat's tail; cow's tail; dog's tail; sheep's tail
+71,horse's head,8,7,15,horse's tail; horse's eye; horse's torso; horse's neck; horse's leg; horse's ear; horse's muzzle; horse's hoof,bird's head; cat's head; cow's head; dog's head; person's head; sheep's head; train's head
+72,horse's eye,8,6,14,horse's tail; horse's head; horse's torso; horse's neck; horse's leg; horse's ear; horse's muzzle; horse's hoof,bird's eye; cat's eye; cow's eye; dog's eye; person's eye; sheep's eye
+73,horse's torso,8,6,14,horse's tail; horse's head; horse's eye; horse's neck; horse's leg; horse's ear; horse's muzzle; horse's hoof,bird's torso; cat's torso; cow's torso; dog's torso; person's torso; sheep's torso
+74,horse's neck,8,6,14,horse's tail; horse's head; horse's eye; horse's torso; horse's leg; horse's ear; horse's muzzle; horse's hoof,bird's neck; cat's neck; cow's neck; dog's neck; person's neck; sheep's neck
+75,horse's leg,8,6,14,horse's tail; horse's head; horse's eye; horse's torso; horse's neck; horse's ear; horse's muzzle; horse's hoof,bird's leg; cat's leg; cow's leg; dog's leg; person's leg; sheep's leg
+76,horse's ear,8,5,13,horse's tail; horse's head; horse's eye; horse's torso; horse's neck; horse's leg; horse's muzzle; horse's hoof,cat's ear; cow's ear; dog's ear; person's ear; sheep's ear
+77,horse's muzzle,8,3,11,horse's tail; horse's head; horse's eye; horse's torso; horse's neck; horse's leg; horse's ear; horse's hoof,cow's muzzle; dog's muzzle; sheep's muzzle
+78,horse's hoof,8,0,8,horse's tail; horse's head; horse's eye; horse's torso; horse's neck; horse's leg; horse's ear; horse's muzzle,
+79,motorbike's wheel,3,4,7,motorbike's saddle; motorbike's handlebar; motorbike's headlight,aeroplane's wheel; bicycle's wheel; bus's wheel; car's wheel
+80,motorbike's saddle,3,1,4,motorbike's wheel; motorbike's handlebar; motorbike's headlight,bicycle's saddle
+81,motorbike's handlebar,3,1,4,motorbike's wheel; motorbike's saddle; motorbike's headlight,bicycle's handlebar
+82,motorbike's headlight,3,4,7,motorbike's wheel; motorbike's saddle; motorbike's handlebar,bicycle's headlight; bus's headlight; car's headlight; train's headlight
+83,person's head,13,7,20,person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,bird's head; cat's head; cow's head; dog's head; horse's head; sheep's head; train's head
+84,person's eye,13,6,19,person's head; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,bird's eye; cat's eye; cow's eye; dog's eye; horse's eye; sheep's eye
+85,person's torso,13,6,19,person's head; person's eye; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,bird's torso; cat's torso; cow's torso; dog's torso; horse's torso; sheep's torso
+86,person's neck,13,6,19,person's head; person's eye; person's torso; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,bird's neck; cat's neck; cow's neck; dog's neck; horse's neck; sheep's neck
+87,person's leg,13,6,19,person's head; person's eye; person's torso; person's neck; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,bird's leg; cat's leg; cow's leg; dog's leg; horse's leg; sheep's leg
+88,person's foot,13,1,14,person's head; person's eye; person's torso; person's neck; person's leg; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,bird's foot
+89,person's nose,13,2,15,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,cat's nose; dog's nose
+90,person's ear,13,5,18,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,cat's ear; cow's ear; dog's ear; horse's ear; sheep's ear
+91,person's eyebrow,13,0,13,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's mouth; person's hair; person's lower arm; person's upper arm; person's hand,
+92,person's mouth,13,0,13,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's hair; person's lower arm; person's upper arm; person's hand,
+93,person's hair,13,0,13,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's lower arm; person's upper arm; person's hand,
+94,person's lower arm,13,0,13,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's upper arm; person's hand,
+95,person's upper arm,13,0,13,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's hand,
+96,person's hand,13,0,13,person's head; person's eye; person's torso; person's neck; person's leg; person's foot; person's nose; person's ear; person's eyebrow; person's mouth; person's hair; person's lower arm; person's upper arm,
+97,pottedplant's pot,1,0,1,pottedplant's plant,
+98,pottedplant's plant,1,0,1,pottedplant's pot,
+99,sheep's tail,8,6,14,sheep's head; sheep's eye; sheep's torso; sheep's neck; sheep's leg; sheep's ear; sheep's muzzle; sheep's horn,aeroplane's tail; bird's tail; cat's tail; cow's tail; dog's tail; horse's tail
+100,sheep's head,8,7,15,sheep's tail; sheep's eye; sheep's torso; sheep's neck; sheep's leg; sheep's ear; sheep's muzzle; sheep's horn,bird's head; cat's head; cow's head; dog's head; horse's head; person's head; train's head
+101,sheep's eye,8,6,14,sheep's tail; sheep's head; sheep's torso; sheep's neck; sheep's leg; sheep's ear; sheep's muzzle; sheep's horn,bird's eye; cat's eye; cow's eye; dog's eye; horse's eye; person's eye
+102,sheep's torso,8,6,14,sheep's tail; sheep's head; sheep's eye; sheep's neck; sheep's leg; sheep's ear; sheep's muzzle; sheep's horn,bird's torso; cat's torso; cow's torso; dog's torso; horse's torso; person's torso
+103,sheep's neck,8,6,14,sheep's tail; sheep's head; sheep's eye; sheep's torso; sheep's leg; sheep's ear; sheep's muzzle; sheep's horn,bird's neck; cat's neck; cow's neck; dog's neck; horse's neck; person's neck
+104,sheep's leg,8,6,14,sheep's tail; sheep's head; sheep's eye; sheep's torso; sheep's neck; sheep's ear; sheep's muzzle; sheep's horn,bird's leg; cat's leg; cow's leg; dog's leg; horse's leg; person's leg
+105,sheep's ear,8,5,13,sheep's tail; sheep's head; sheep's eye; sheep's torso; sheep's neck; sheep's leg; sheep's muzzle; sheep's horn,cat's ear; cow's ear; dog's ear; horse's ear; person's ear
+106,sheep's muzzle,8,3,11,sheep's tail; sheep's head; sheep's eye; sheep's torso; sheep's neck; sheep's leg; sheep's ear; sheep's horn,cow's muzzle; dog's muzzle; horse's muzzle
+107,sheep's horn,8,1,9,sheep's tail; sheep's head; sheep's eye; sheep's torso; sheep's neck; sheep's leg; sheep's ear; sheep's muzzle,cow's horn
+108,train's headlight,6,4,10,train's head; train's front; train's side; train's back; train's roof; train's coach,bicycle's headlight; bus's headlight; car's headlight; motorbike's headlight
+109,train's head,6,7,13,train's headlight; train's front; train's side; train's back; train's roof; train's coach,bird's head; cat's head; cow's head; dog's head; horse's head; person's head; sheep's head
+110,train's front,6,2,8,train's headlight; train's head; train's side; train's back; train's roof; train's coach,bus's front; car's front
+111,train's side,6,2,8,train's headlight; train's head; train's front; train's back; train's roof; train's coach,bus's side; car's side
+112,train's back,6,2,8,train's headlight; train's head; train's front; train's side; train's roof; train's coach,bus's back; car's back
+113,train's roof,6,2,8,train's headlight; train's head; train's front; train's side; train's back; train's coach,bus's roof; car's roof
+114,train's coach,6,0,6,train's headlight; train's head; train's front; train's side; train's back; train's roof,
+115,tvmonitor's screen,0,0,0,,

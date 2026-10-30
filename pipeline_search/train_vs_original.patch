@@ -1,0 +1,356 @@
+--- pipeline_search/reference_original_train_pp116_softsingle_dual.py	2026-10-22 17:36:49.169981972 +0000
++++ pipeline_search/train_pp116_pipeline_search.py	2026-10-22 17:40:30.563673141 +0000
+@@ -42,7 +42,84 @@
+ 
+ import train_relproto_alignemt as original
+ 
+-VERSION = "pp116_nightly_softsingle_presence_vs_objectfull_v1"
++VERSION = "pp116_pipeline_search_20261023_v1"
++
++# Used only for globally retained NCE with downweighted cross-object negatives.
++# Fixed taxonomy derived from the frozen text bank. It never contains GT pixel masks.
++_OBJECT_TAXONOMY_MASKS: dict[str, torch.Tensor] = {}
++# Computed exclusively from TRAINING image-level Presence, not GT pixels.
++_PART_FREQ_WEIGHTS = torch.ones(original.NUM_PARTS,dtype=torch.float32)
++
++
++def experimental_nce_losses(visual, all_text, pids, examples, member_indices, args):
++    """Always uses the global 116-part vocabulary except explicit negative tests.
++
++    visual.detach() is immutable: no NCE gradients through patch assignment.
++    Output per positive Part [B,K]. All variants preserve original K averaging.
++    """
++    B, K, _ = visual.shape
++    C = original.NUM_PARTS
++    logits = torch.matmul(visual.detach(), all_text.T) / args.nce_temperature
++    targets = pids.reshape(-1)
++    flat = logits.reshape(-1, C)
++    method = args.nce_variant
++    if method == "global":
++        return F.cross_entropy(flat, targets, reduction="none").reshape(B, K)
++    if method == "smooth":
++        return F.cross_entropy(flat, targets, reduction="none",
++                               label_smoothing=args.label_smoothing).reshape(B, K)
++    if method == "clip":
++        raw = F.cross_entropy(flat, targets, reduction="none").reshape(B, K)
++        # Hard-loss truncation is an explicit noise-robust *ablation*, not an asserted fix.
++        return raw.clamp(max=args.nce_clip)
++    if method == "hardneg":
++        n = min(args.hardneg_k, C - 1)
++        neg = flat.detach().clone()
++        neg.scatter_(1, targets[:, None], -torch.inf)
++        idx = torch.topk(neg, k=n, dim=1).indices
++        keep = torch.zeros_like(flat, dtype=torch.bool)
++        keep.scatter_(1, idx, True)
++        keep.scatter_(1, targets[:, None], True)
++        return F.cross_entropy(flat.masked_fill(~keep, -torch.inf),
++                               targets, reduction="none").reshape(B, K)
++    if method == "crossweight":
++        # Keep ALL 116 classes and the positive; cross-object negatives are
++        # still present but weighted by gamma (0 < gamma <= 1) in denominator.
++        local = torch.stack([_OBJECT_TAXONOMY_MASKS[examples[i].class_name]
++                            for i in member_indices], dim=0).to(device=flat.device)
++        local = local[:, None, :].expand(B, K, C).reshape(-1, C)
++        if not bool(local.gather(1, targets[:, None]).all()):
++            raise RuntimeError("Cross-weight loss positive ID not in own taxonomy")
++        weighted_logits = flat + (~local).to(flat.dtype) * math.log(args.cross_weight)
++        return (torch.logsumexp(weighted_logits, dim=-1)
++                - flat.gather(1, targets[:, None]).squeeze(1)).reshape(B, K)
++    raise ValueError("Unexpected NCE variant: " + method)
++
++
++def pseudo_reliability(weights, patch, positive_count, fallback, weighted_margin,
++                       *, mode, floor):
++    """GT-free reliability proxy for per-positive loss weighting; intentionally detached.
++
++    Does not treat max softmax weight as calibrated correctness confidence.
++    floor>0 prevents rare/failed Part from having no learning signal.
++    """
++    B, K, N = weights.shape
++    if mode == "off":
++        return torch.ones((B,K), device=weights.device, dtype=weights.dtype)
++    with torch.no_grad():
++        # Margin reliability: combines positive support and weighted advantage.
++        support = (torch.log1p(positive_count.float()) / math.log(13.0)).clamp(0,1)
++        margin = torch.sigmoid((weighted_margin.float() - 0.02)/0.02)
++        score = support * margin * (1-fallback.float())
++        if mode == "coherence":
++            # Weighted within-prototype visual consistency; no labels are used.
++            pooled = torch.bmm(weights, patch).norm(dim=-1)
++            coherence = ((pooled-0.55)/0.40).clamp(0,1)
++            score = score * coherence
++        elif mode != "margin":
++            raise ValueError(mode)
++        return (floor + (1-floor)*score).detach()
++
+ 
+ 
+ def soft_relative_prototypes(
+@@ -51,6 +128,11 @@
+     foreground: torch.Tensor,    # [B,1024], bool
+     *,
+     temperature: float,
++    mode: str = "positive",
++    top_k: int = 8,
++    gate_tau: float = 0.03,
++    margin_power: float = 1.0,
++    fallback_k: int = 4,
+ ) -> tuple[torch.Tensor, dict[str, torch.Tensor]]:
+     """K>=2 only; all positive-margin patches, no Top-K.
+ 
+@@ -79,10 +161,40 @@
+     # This is an eligibility fallback, not a learned extra candidate.
+     anchor_hot = F.one_hot(anchor_idx, relative.size(-1)).to(torch.bool)
+     candidates = positives | (anchor_hot & empty[..., None])
++    if mode == "topk":
++        # Only change candidate SUPPORT. Never introduce non-positive patches
++        # unless the original fallback was required.
++        k = min(top_k, relative.size(-1))
++        top = relative.masked_fill(~candidates, -torch.inf).topk(k, dim=-1).indices
++        keep = torch.zeros_like(candidates)
++        keep.scatter_(-1, top, True)
++        candidates = candidates & keep
++    elif mode == "fallback_k":
++        # For no-positive rows, aggregate top-k uncertain foreground tokens
++        # instead of a single automatically overconfident anchor.
++        k = min(fallback_k, relative.size(-1))
++        top = relative.topk(k,dim=-1).indices
++        hot = torch.zeros_like(candidates)
++        hot.scatter_(-1, top, True)
++        candidates = positives | (hot & empty[..., None])
++    elif mode == "softgate":
++        # Continuous reliability gating on *all* foreground patches. Critically,
++        # this does NOT require any spatial GT labels or modify Presence.
++        candidates = foreground[:,None,:].expand_as(relative)
++    elif mode not in ("positive", "marginpower"):
++        raise ValueError("Unexpected prototype variant: " + mode)
+     if not bool(candidates.any(dim=-1).all()):
+         raise AssertionError("empty candidate row after fallback")
+ 
+-    logits = (relative / temperature).masked_fill(~candidates, -torch.inf)
++    logits = (relative / temperature)
++    if mode == "softgate":
++        logits = logits + F.logsigmoid(relative / gate_tau)
++    elif mode == "marginpower":
++        # Within positive support, emphasize high relative margins; fallback
++        # retains its original single-anchor weight of one.
++        logits = logits + margin_power * torch.log(
++            (relative.clamp_min(1e-6) / 0.03).clamp_min(1e-6)) * positives.float()
++    logits = logits.masked_fill(~candidates, -torch.inf)
+     weights = torch.softmax(logits, dim=-1)
+     # Softmax is well-defined: each row has >=1 finite candidate.
+     if not torch.isfinite(weights).all():
+@@ -104,6 +216,7 @@
+             "effective_count": effective.detach(),
+             "weighted_margin": expected_margin.detach(),
+             "anchor_margin": relative.gather(-1, anchor_idx[..., None]).squeeze(-1).detach(),
++            "weights": weights.detach(),
+         }
+     return prototypes, info
+ 
+@@ -197,19 +310,36 @@
+         else:
+             visual, diag = soft_relative_prototypes(
+                 current_text, patch, fg, temperature=args.soft_temperature,
++                mode=args.proto_variant, top_k=args.proto_topk,
++                gate_tau=args.gate_tau, margin_power=args.margin_power,
++                fallback_k=args.fallback_k,
+             )
+             positives = diag["positive_count"]
+             fallback = diag["fallback"]
+             effective = diag["effective_count"]
+             weighted_margin = diag["weighted_margin"]
+ 
+-        # The only InfoNCE target: completely STOP the pseudo visual target.
+-        logits = torch.matmul(visual.detach(), all_text.T) / args.nce_temperature
+-        part_losses = F.cross_entropy(
+-            logits.reshape(-1, original.NUM_PARTS),
+-            pids.reshape(-1), reduction="none",
+-        ).reshape(B, K)
+-        nce_per_annotation = part_losses.mean(dim=1)
++        # Global 116-way NCE remains the reference. Only designated ablations
++        # alter its softmax target distribution or robustness.
++        part_losses = experimental_nce_losses(
++            visual, all_text, pids, examples, member_indices, args)
++        if args.reliability_variant == "off":
++            conf = torch.ones_like(part_losses)
++        elif K == 1:
++            # No relative competition exists: do not penalize singleton Presence.
++            conf = torch.ones_like(part_losses)
++        else:
++            # Recompute weights from normalized prototypes is wrong; use the
++            # exact weights returned by the original support construction below.
++            conf = pseudo_reliability(
++                weights=diag["weights"], patch=patch,
++                positive_count=positives, fallback=fallback,
++                weighted_margin=weighted_margin,
++                mode=args.reliability_variant, floor=args.reliability_floor)
++        if args.balance_presence:
++            class_weights = _PART_FREQ_WEIGHTS.to(device=device)[pids]
++            part_losses = part_losses * class_weights
++        nce_per_annotation = (part_losses * conf).mean(dim=1)
+ 
+         if K >= 3 and args.lambda_struct > 0:
+             local_g = frozen_relations[pids.unsqueeze(-1), pids.unsqueeze(-2)]
+@@ -221,6 +351,9 @@
+             struct_active = nce_per_annotation.new_zeros((B,))
+             triplet_count = nce_per_annotation.new_zeros((B,))
+ 
++        if args.reliability_on_structure and K >= 3:
++            # Detached confidence prevents W manipulating its own scalar weight.
++            rank_per_annotation = rank_per_annotation * conf.mean(dim=1)
+         total_per_annotation = nce_per_annotation + args.lambda_struct * rank_per_annotation
+         for j, i in enumerate(member_indices):
+             loss_parts[i] = total_per_annotation[j]
+@@ -236,6 +369,8 @@
+             stat_sum["mean_triplets_per_annotation"] += float(triplet_count.sum().item())
+             stat_sum["single_part_count"] += float(B if K == 1 else 0)
+             stat_sum["multi_part_occurrences"] += float(B*K if K >= 2 else 0)
++            if args.reliability_variant != "off":
++                stat_sum["pseudo_confidence_sum"] += float(conf.sum().item())
+ 
+     if any(v is None for v in loss_parts):
+         raise RuntimeError("missing per-annotation losses")
+@@ -260,6 +395,8 @@
+         "mean_effective_patch_count": stat_sum["effective_patch_count"] / part_count,
+         "mean_weighted_margin": stat_sum["mean_weighted_margin"] / part_count,
+         "single_part_annotation_fraction": stat_sum["single_part_count"] / num_samples,
++        "mean_pseudo_confidence": (stat_sum["pseudo_confidence_sum"] / part_count
++                                   if args.reliability_variant != "off" else 1.0),
+     }
+     # Return separated scalars for a first-batch structural gradient sanity check.
+     return total_loss, diag_out, {"nce": nce_loss, "relation": rel_loss}
+@@ -289,7 +426,7 @@
+         "loss_total", "loss_nce", "loss_relation", "structure_active_fraction",
+         "mean_triplets_per_annotation", "mean_positive_count_multi",
+         "fallback_fraction_multi", "mean_effective_patch_count", "mean_weighted_margin",
+-        "single_part_annotation_fraction",
++        "single_part_annotation_fraction", "mean_pseudo_confidence",
+     )
+     for epoch in range(1, args.epochs + 1):
+         if device.type == "cuda":
+@@ -357,14 +494,18 @@
+                         "candidate parts determined by --part_setting (presence or objectfull)",
+             "structure_selection": "no SGRC discrete search; differentiable visual relation ranking "
+                                    "through soft assignment to shared orthogonal W",
+-            "loss": "116-way visual-to-text InfoNCE with stopgrad target PLUS relational ranking "
+-                    "with gradient through V(W); equal-annotation mean; same for both arms",
++            "loss": "global-116 InfoNCE variant + relation ranking; exact design recorded in search_variant",
+             "part_supervision": args.part_setting,
+             "candidate_source": ("image-specific present part classes" if args.part_setting == "presence"
+                                  else "ALL taxonomy part classes under known object"),
+             "W": "one 768x768 shared orthogonal map, Adam + per-step SVD retraction",
+         })
+         ckpt["experiment_arm"] = args.part_setting
++        ckpt["search_variant"] = {k: getattr(args,k) for k in (
++            "proto_variant", "proto_topk", "gate_tau", "margin_power", "fallback_k",
++            "nce_variant", "label_smoothing", "cross_weight", "hardneg_k", "nce_clip",
++            "reliability_variant", "reliability_floor", "reliability_on_structure", "balance_presence")}
++        ckpt["method"]["nce_scope"] = "global-116, except weighted/hardneg explicit ablations"
+         original.atomic_torch_save(ckpt, out_dir / f"W_epoch_{epoch:03d}.pt")
+         original.atomic_torch_save(ckpt, out_dir / "W_last.pt")
+         print(f"[epoch] {epoch:02d}/{args.epochs} "
+@@ -400,6 +541,21 @@
+     p.add_argument("--lambda_struct", type=float, default=4.0)
+     p.add_argument("--rank_delta", type=float, default=0.05)
+     p.add_argument("--rank_margin", type=float, default=0.05)
++    p.add_argument("--proto_variant", choices=("positive","topk","fallback_k","softgate","marginpower"), default="positive")
++    p.add_argument("--proto_topk", type=int, default=8)
++    p.add_argument("--fallback_k", type=int, default=4)
++    p.add_argument("--gate_tau", type=float, default=0.03)
++    p.add_argument("--margin_power", type=float, default=1.0)
++    p.add_argument("--nce_variant", choices=("global","smooth","crossweight","hardneg","clip"), default="global")
++    p.add_argument("--label_smoothing", type=float, default=0.05)
++    p.add_argument("--cross_weight", type=float, default=0.25)
++    p.add_argument("--hardneg_k", type=int, default=16)
++    p.add_argument("--nce_clip", type=float, default=4.0)
++    p.add_argument("--reliability_variant", choices=("off","margin","coherence"), default="off")
++    p.add_argument("--reliability_floor", type=float, default=0.25)
++    p.add_argument("--reliability_on_structure", action="store_true")
++    p.add_argument("--balance_presence", action="store_true",
++                   help="inverse-sqrt training Presence-frequency positive weights; clipped and mean-normalized")
+     return p
+ 
+ 
+@@ -415,6 +571,19 @@
+             raise ValueError(f"{name} must be finite and >=0")
+     if not 1 <= args.prototype_max_patches <= original.DEFAULT_PATCH_COUNT:
+         raise ValueError("--prototype_max_patches must be within 1..1024 (single-part control only)")
++    if not (1 <= args.proto_topk <= original.DEFAULT_PATCH_COUNT and
++            1 <= args.fallback_k <= original.DEFAULT_PATCH_COUNT):
++        raise ValueError("topk/fallback_k must be within 1..1024")
++    if not (args.gate_tau>0 and math.isfinite(args.gate_tau) and
++            math.isfinite(args.margin_power) and args.margin_power >= 0):
++        raise ValueError("invalid gating parameters")
++    if not (0 <= args.label_smoothing < 1 and 0 < args.cross_weight <= 1 and
++            1 <= args.hardneg_k < original.NUM_PARTS and args.nce_clip>0):
++        raise ValueError("invalid NCE ablation parameters")
++    if not 0 < args.reliability_floor <= 1:
++        raise ValueError("reliability_floor must be in (0,1]")
++    if args.reliability_on_structure and args.reliability_variant == "off":
++        raise ValueError("reliability_on_structure requires a reliability_variant")
+ 
+ 
+ def self_test() -> None:
+@@ -504,7 +673,34 @@
+     print("PASS all-positive softmax + exact-tie/negative-margin anchor fallback")
+     print("PASS nonzero relational gradient from visual prototype to W")
+     print("PASS stop-grad InfoNCE target")
+-    print("SELF_TEST_PASS_SOFT_STRUCTURE")
++    # Run the exact global NCE branch and ensure it agrees with the old formula.
++    from types import SimpleNamespace
++    sim_v = torch.nn.functional.normalize(torch.randn(2,3,D), dim=-1)
++    sim_t = torch.nn.functional.normalize(torch.randn(original.NUM_PARTS,D),dim=-1).requires_grad_(True)
++    sim_p = torch.tensor([[1,4,6],[7,11,18]],dtype=torch.long)
++    common = dict(nce_temperature=0.07,nce_variant="global",label_smoothing=0.05,
++                  cross_weight=0.25,hardneg_k=16,nce_clip=4.0)
++    a = SimpleNamespace(**common)
++    got = experimental_nce_losses(sim_v,sim_t,sim_p,None,None,a)
++    ref = F.cross_entropy((sim_v.detach()@sim_t.T/0.07).reshape(-1,original.NUM_PARTS),
++                          sim_p.reshape(-1),reduction="none").reshape(2,3)
++    assert torch.equal(got,ref), "baseline NCE must match original bitwise"
++    for variant in ("smooth","clip","hardneg"):
++        a.nce_variant=variant
++        x=experimental_nce_losses(sim_v,sim_t,sim_p,None,None,a)
++        assert torch.isfinite(x).all() and x.shape==(2,3)
++    a.nce_variant="crossweight"
++    _OBJECT_TAXONOMY_MASKS.clear()
++    _OBJECT_TAXONOMY_MASKS["test"] = torch.ones(original.NUM_PARTS,dtype=torch.bool)
++    class Ex:
++        class_name="test"
++    obj=experimental_nce_losses(sim_v,sim_t,sim_p,[Ex(),Ex()],[0,1],a)
++    assert torch.allclose(obj,ref,atol=1e-6),"crossweight with all local=global"
++    _OBJECT_TAXONOMY_MASKS.clear()
++    for mode in ("positive","topk","fallback_k","softgate","marginpower"):
++        x,_=soft_relative_prototypes(text[pids],tokens,foreground,temperature=0.05,mode=mode)
++        assert torch.isfinite(x).all() and x.shape==(1,3,D)
++    print("SELF_TEST_PASS_PIPELINE_SEARCH")
+ 
+ 
+ def prepare_examples_checked(*args, **kwargs):
+@@ -519,6 +715,25 @@
+         if "'s " not in name:
+             raise ValueError(f"Invalid part class name: {name!r}")
+         taxonomy[name.split("'s ", 1)[0]].append(pid)
++    _OBJECT_TAXONOMY_MASKS.clear()
++    for obj, ids in taxonomy.items():
++        mask = torch.zeros(original.NUM_PARTS, dtype=torch.bool)
++        mask[ids] = True
++        _OBJECT_TAXONOMY_MASKS[obj] = mask
++    # Frequency balancing is derived only from image-level Presence IDs in the
++    # original training cache. No spatial GT is used or loaded here.
++    counts = torch.zeros(original.NUM_PARTS,dtype=torch.float64)
++    for ex in examples:
++        counts[ex.pids.long()] += 1
++    present = counts>0
++    inv = torch.zeros_like(counts)
++    if present.any():
++        inv[present] = counts[present].clamp_min(1).rsqrt()
++        inv[present] /= ((inv[present]*counts[present]).sum()/counts[present].sum()).clamp_min(1e-12)
++        inv[present] = inv[present].clamp(0.33,3.0)
++    inv[~present] = 1.0
++    global _PART_FREQ_WEIGHTS
++    _PART_FREQ_WEIGHTS=inv.float()
+ 
+     if _SETTING == "objectfull":
+         # A presence-derived cache, even with labels overwritten, would be contaminated
